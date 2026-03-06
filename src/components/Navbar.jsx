@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
-  { name: 'Home', path: '#home' },
-  { name: 'About', path: '#about' },
-  { name: 'Contact', path: '#contact' },
+  { name: 'Home', path: '/' },
+  { name: 'About', path: '/about' },
+  { name: 'Contact', path: '/contact' },
 ];
 
 const ClassyNavbar = () => {
@@ -22,7 +22,7 @@ const ClassyNavbar = () => {
 
           return (
             <a
-              key={item.name}
+              key={item.namnope}
               href={item.path}
               onMouseEnter={() => setHovered(idx)}
               onMouseLeave={() => setHovered(null)}
