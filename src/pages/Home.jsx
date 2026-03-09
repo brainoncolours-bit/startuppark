@@ -28,16 +28,23 @@ const StartupParkLanding = () => {
   const galleryTextOpacity = useTransform(galleryProgress, [0.6, 0.8], [0, 1]);
   const galleryTextY = useTransform(galleryProgress, [0.6, 0.8], [30, 0]);
 
-  // Positions defined by grid row/column to ensure perfect alignment on large screens
+  // Waabi-inspired scattered layout positions
   const floaters = [
-    { row: 1, col: 1, x: -200, y: -200, img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=400" },
-    { row: 1, col: 2, x: 0, y: -250, img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=400" },
-    { row: 1, col: 3, x: 200, y: -200, img: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=400" },
-    { row: 2, col: 1, x: -250, y: 0, img: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=400" },
-    { row: 2, col: 3, x: 250, y: 0, img: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=400" },
-    { row: 3, col: 1, x: -200, y: 200, img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=400" },
-    { row: 3, col: 2, x: 0, y: 250, img: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=400" },
-    { row: 3, col: 3, x: 200, y: 200, img: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=400" },
+    // Top Set
+    { row: 1, col: 1, x: -300, y: -200, img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=400" }, // Top left
+    { row: 1, col: 3, x: 300, y: -200, img: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=400" },  // Top right
+    
+    // Middle Outer Set
+    { row: 2, col: 1, x: -500, y: 0, img: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=400" },    // Far left
+    { row: 2, col: 3, x: 500, y: 0, img: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=400" },     // Far right
+    
+    // Bottom Inner Set
+    { row: 3, col: 1, x: -250, y: 200, img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=400" },  // Bottom inner left
+    { row: 3, col: 3, x: 250, y: 200, img: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=400" },   // Bottom inner right
+    
+    // Very Bottom Outer Set
+    { row: 3, col: 1, x: -450, y: 400, img: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=400" },    // Far bottom left
+    { row: 3, col: 3, x: 450, y: 400, img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=400" },   // Far bottom right
   ];
 
   return (
