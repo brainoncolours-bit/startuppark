@@ -4,10 +4,7 @@ import Lenis from '@studio-freight/lenis';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
-import About from './pages/About';
-import Courses from './pages/Courses';
-import Contact from './pages/Contact';
-import Blog from './pages/Blog';
+
 
 function AppContent() {
   const [showNavbar, setShowNavbar] = useState(true); // Default to true so it shows at start
@@ -63,10 +60,7 @@ function AppContent() {
       <main className={`flex-1 w-full ${isHome ? '' : 'bg-gray-50'}`}>
         <Routes>
           <Route path="/" element={<Home onNavbarShow={setShowNavbar} />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/blog" element={<Blog />} />
+         
         </Routes>
       </main>
       {!isHome && <Footer />}
