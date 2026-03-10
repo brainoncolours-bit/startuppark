@@ -21,20 +21,22 @@ function AppContent() {
     }
   }, [location.pathname]);
 
+  const isHome = location.pathname === '/';
+
   return (
     <div className="flex flex-col min-h-screen w-full">
-      <Navbar show={showNavbar} />
-      <main className="flex-1 w-full bg-gray-50">
-          <Routes>
-            <Route path="/" element={<Home onNavbarShow={setShowNavbar} />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/blog" element={<Blog />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      {!isHome && <Navbar show={showNavbar} />}
+      <main className={`flex-1 w-full ${isHome ? '' : 'bg-gray-50'}`}>
+        <Routes>
+          <Route path="/" element={<Home onNavbarShow={setShowNavbar} />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/blog" element={<Blog />} />
+        </Routes>
+      </main>
+      {!isHome && <Footer />}
+    </div>
   );
 }
 

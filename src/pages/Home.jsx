@@ -1,156 +1,163 @@
-import React, { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Star, Rocket, TrendingUp, Users } from "lucide-react";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+
+// Asset Imports
+import img1 from "../assets/4L1A0587.JPG.jpeg";
+import img2 from "../assets/4L1A0589.JPG.jpeg";
+import img4 from "../assets/4L1A0651.JPG.jpeg";
+import img5 from "../assets/4L1A0676.JPG.jpeg";
+import img6 from "../assets/MHD03595.JPG";
+import img7 from "../assets/MHD03596.JPG";
+import img9 from "../assets/MHD03615.JPG";
+import img10 from "../assets/MHD03633.JPG";
+import img11 from "../assets/MHD03637.JPG";
+import img12 from "../assets/MHD03642.JPG";
+import img14 from "../assets/MHD03649.JPG";
+import img15 from "../assets/MHD03656.JPG";
+import img16 from "../assets/MHD03659.JPG";
+import img17 from "../assets/MHD03664.JPG";
+import img19 from "../assets/MHD03670.JPG";
+import img20 from "../assets/MHD03677.JPG";
 
 const StartupParkLanding = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef(null);
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  const galleryRef = useRef(null);
-  const { scrollYProgress: galleryProgress } = useScroll({
-    target: galleryRef,
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
     offset: ["start start", "end end"],
   });
 
-  // Scale and Y adjustments
-  const mainVideoScale = useTransform(galleryProgress, [0, 0.4], [1, 0.22]);
-  const mainVideoRadius = useTransform(galleryProgress, [0, 0.3], ["0px", "40px"]);
-  const mainVideoY = useTransform(galleryProgress, [0, 0.4], ["0%", "-10%"]); 
+  // MASS adjusted to 0.2 for faster response; DAMPING increased to 40 to eliminate "stutter"
+  const smoothProgress = useSpring(scrollYProgress, {
+    damping: 40,
+    stiffness: 90,
+    mass: 0.2,
+    restDelta: 0.001
+  });
 
-  const floatOpacity = useTransform(galleryProgress, [0.15, 0.4], [0, 1]);
-  const floatScale = useTransform(galleryProgress, [0.15, 0.4], [0.5, 1]);
-  const galleryTextOpacity = useTransform(galleryProgress, [0.6, 0.8], [0, 1]);
-  const galleryTextY = useTransform(galleryProgress, [0.6, 0.8], [30, 0]);
+  // --- ANIMATION CALCULATIONS (Same ranges as requested) ---
+  const heroTextOpacity = useTransform(smoothProgress, [0, 0.08], [1, 0]);
+  const heroTextY = useTransform(smoothProgress, [0, 0.12], [0, -100]);
 
-  // Waabi-inspired scattered layout positions
-  const floaters = [
-    // Top Set
-    { row: 1, col: 1, x: -300, y: -200, img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=400" }, // Top left
-    { row: 1, col: 3, x: 300, y: -200, img: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=400" },  // Top right
-    
-    // Middle Outer Set
-    { row: 2, col: 1, x: -500, y: 0, img: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=400" },    // Far left
-    { row: 2, col: 3, x: 500, y: 0, img: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=400" },     // Far right
-    
-    // Bottom Inner Set
-    { row: 3, col: 1, x: -250, y: 200, img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=400" },  // Bottom inner left
-    { row: 3, col: 3, x: 250, y: 200, img: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=400" },   // Bottom inner right
-    
-    // Very Bottom Outer Set
-    { row: 3, col: 1, x: -450, y: 400, img: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=400" },    // Far bottom left
-    { row: 3, col: 3, x: 450, y: 400, img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=400" },   // Far bottom right
+  const videoScale = useTransform(smoothProgress, [0.1, 0.35], [1, 0.35]);
+  const videoRadius = useTransform(smoothProgress, [0.12, 0.3], [0, 32]);
+  const videoY = useTransform(smoothProgress, [0.35, 0.75], ["0%", "-120%"]);
+  const videoOpacity = useTransform(smoothProgress, [0.45, 0.55], [1, 0]);
+
+  const gridOpacity = useTransform(smoothProgress, [0.15, 0.25, 0.75, 0.85], [0, 1, 1, 0]);
+  const col1Y = useTransform(smoothProgress, [0.15, 0.85], ["80vh", "-160vh"]);
+  const col2Y = useTransform(smoothProgress, [0.15, 0.85], ["40vh", "-200vh"]);
+  const col4Y = useTransform(smoothProgress, [0.15, 0.85], ["60vh", "-170vh"]);
+  const col5Y = useTransform(smoothProgress, [0.15, 0.85], ["30vh", "-140vh"]);
+
+  const contentOpacity = useTransform(smoothProgress, [0.38, 0.48, 0.65, 0.75], [0, 1, 1, 0]);
+  const contentScale = useTransform(smoothProgress, [0.4, 0.48], [0.85, 1]);
+
+  const endTitleOpacity = useTransform(smoothProgress, [0.82, 0.92], [0, 1]);
+  const endTitleY = useTransform(smoothProgress, [0.82, 0.92], [80, 0]);
+
+  const columns = [
+    { y: col1Y, images: [img1, img6, img11, img16], left: "2%" },
+    { y: col2Y, images: [img2, img7, img12, img17], left: "22%" },
+    { isVideo: true, left: "50%" }, 
+    { y: col4Y, images: [img4, img9, img14, img19], left: "78%" },
+    { y: col5Y, images: [img5, img10, img15, img20], left: "95%" },
   ];
 
   return (
-    <div className="bg-white text-zinc-950 font-sans selection:bg-blue-600 selection:text-white">
-      <section ref={galleryRef} className="relative h-[400vh]">
-        <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-white">
-          
-          {/* Main Layout Container: Now truly full width */}
-          <div className="relative w-full h-full flex items-center justify-center">
-            
-            {/* 1. THE MAIN VIDEO */}
-            <motion.div
-              style={{
-                scale: mainVideoScale,
-                borderRadius: mainVideoRadius,
-                y: mainVideoY,
-                zIndex: 20
-              }}
-              className="absolute w-full h-full overflow-hidden shadow-2xl flex items-center justify-center bg-zinc-100"
-            >
-              <video autoPlay loop muted playsInline className="w-full h-full object-cover">
-                <source src="/Startup_Festival_2025_Teaser_Video_Day_1_Inauguration_Day_2160P.mp4" type="video/mp4" />
-              </video>
-              <motion.div
-                style={{ opacity: useTransform(galleryProgress, [0, 0.05], [1, 0]) }}
-                className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center text-center p-6"
-              >
-                <h1 className="text-[12vw] font-black text-white tracking-tighter uppercase leading-[0.8] drop-shadow-2xl">
-                  Innovate.
-                </h1>
-              </motion.div>
-            </motion.div>
-
-            {/* 2. FLOATING IMAGES GRID */}
-            <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-4 md:gap-12 p-4 md:p-24 pointer-events-none max-w-[1800px] mx-auto">
-              {floaters.map((item, i) => (
-                <motion.div
-                  key={i}
-                  style={{
-                    gridRow: item.row,
-                    gridColumn: item.col,
-                    opacity: floatOpacity,
-                    scale: floatScale,
-                    y: useTransform(galleryProgress, [0.15, 0.4], [item.y, -60]), 
-                    x: useTransform(galleryProgress, [0.15, 0.4], [item.x, 0]),
-                  }}
-                  className="relative w-full h-full flex items-center justify-center"
-                >
-                  <div className="w-full aspect-square md:w-64 md:h-64 rounded-[24px] md:rounded-[40px] overflow-hidden shadow-2xl border border-white/10 bg-zinc-200">
-                    <img src={item.img} className="w-full h-full object-cover" alt="Ecosystem" />
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* --- NEW TEXT SECTION --- */}
-      <section className="py-40 bg-white relative z-30">
-        <div className="container mx-auto px-6 max-w-5xl text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <h2 className="text-zinc-400 text-lg md:text-xl font-bold mb-6 tracking-widest uppercase">
-              We built our own road.
-            </h2>
-            <p className="text-zinc-900 text-3xl md:text-6xl font-black leading-[1.05] tracking-tighter">
-              Our revolutionary Physical AI Platform enables—for the first time ever—true scale, 
-              generalizing to different form factors and environments.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* --- STATS SECTION --- */}
-      <section className="relative z-40 bg-white py-32">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { label: "Startups", val: "200+", icon: <Rocket className="text-blue-600"/> },
-              { label: "Funding", val: "₹600Cr+", icon: <TrendingUp className="text-indigo-600"/> },
-              { label: "Jobs", val: "10,000+", icon: <Users className="text-blue-500"/> }
-            ].map((s, i) => (
-              <motion.div key={i} whileHover={{ y: -10 }} className="p-12 bg-zinc-50 rounded-[40px] border border-zinc-100 transition-all">
-                <div className="mb-6">{s.icon}</div>
-                <div className="text-5xl font-black mb-1">{s.val}</div>
-                <div className="text-zinc-400 uppercase tracking-widest text-[10px] font-bold">{s.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <style jsx>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+    <div ref={containerRef} className="relative h-[1000vh] bg-[#f0f0ec]">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap');
+        
+        /* GPU Acceleration for all motion elements */
+        .accelerate {
+          will-change: transform, opacity;
+          transform: translateZ(0);
         }
-        .animate-marquee {
-          animation: marquee 20s linear infinite;
+
+        .hero-heading {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(3.5rem, 10vw, 8.5rem);
+          line-height: 0.9;
         }
+        .center-text-heading {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(2rem, 5vw, 3.5rem);
+        }
+        .end-heading {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(2.5rem, 8vw, 6rem);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
+
+      <div className="sticky top-0 h-screen w-full overflow-hidden no-scrollbar">
+        
+        {/* HERO VIDEO - Optimized with Accelerate class */}
+        <motion.div
+          style={{ 
+            scale: videoScale, 
+            borderRadius: videoRadius, 
+            y: videoY,
+            opacity: videoOpacity 
+          }}
+          className="accelerate absolute inset-0 z-20 flex items-center justify-center overflow-hidden bg-black shadow-2xl"
+        >
+          <video
+            autoPlay loop muted playsInline preload="auto"
+            className="w-full h-full object-cover opacity-70"
+          >
+            <source src="/Startup_Festival_2025_Teaser_Video_Day_1_Inauguration_Day_2160P.mp4" type="video/mp4" />
+          </video>
+          
+          <motion.div 
+            style={{ opacity: heroTextOpacity, y: heroTextY }}
+            className="accelerate absolute inset-0 flex items-center justify-center text-center text-white p-6"
+          >
+            <h1 className="hero-heading tracking-tighter drop-shadow-2xl">
+              Innovate.<br/>Elevate.<br/>Create.
+            </h1>
+          </motion.div>
+        </motion.div>
+
+        {/* PARALLAX GRID - Optimized with Accelerate class */}
+        <motion.div style={{ opacity: gridOpacity }} className="accelerate absolute inset-0 z-10">
+          {columns.map((col, i) => !col.isVideo && (
+            <motion.div
+              key={i}
+              style={{ y: col.y, left: col.left, x: "-50%" }}
+              className="accelerate absolute top-0 flex flex-col gap-16 w-[16vw]"
+            >
+              {col.images.map((src, idx) => (
+                <div key={idx} className="w-full aspect-[4/5] bg-white/10 rounded-3xl overflow-hidden shadow-2xl">
+                  <img src={src} alt="" className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* CONTENT OVERLAYS */}
+        <motion.div 
+          style={{ opacity: contentOpacity, scale: contentScale }}
+          className="accelerate absolute inset-0 z-[25] flex items-center justify-center px-6 pointer-events-none"
+        >
+          <div className="max-w-3xl text-center">
+            <h2 className="center-text-heading text-gray-900 mb-8 leading-tight">We built our own road.</h2>
+            <p className="text-xl md:text-3xl text-gray-600 font-light leading-relaxed">
+              True collaboration across disciplines.
+            </p>
+          </div>
+        </motion.div>
+
+        <motion.div 
+          style={{ opacity: endTitleOpacity, y: endTitleY }}
+          className="accelerate absolute inset-0 z-0 flex flex-col items-center justify-center text-center p-6"
+        >
+          <h2 className="end-heading text-gray-900 mb-6">The Startup School<br/>Behind It All.</h2>
+        </motion.div>
+      </div>
     </div>
   );
 };
