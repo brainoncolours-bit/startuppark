@@ -3,595 +3,365 @@ import {
   motion as Motion,
   useScroll,
   useTransform,
-  useMotionValueEvent,
 } from "framer-motion";
 
-// Dummy Image URLs for high-quality startup aesthetic
-const img1 =
-  "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=800&q=80";
-const img2 =
-  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80";
-const img4 =
-  "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80";
-const img5 =
-  "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800&q=80";
-const img6 =
-  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80";
-const img7 =
-  "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80";
-const img9 =
-  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80";
-const img10 =
-  "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80";
-const img11 =
-  "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80";
-const img12 =
-  "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80";
-const img14 =
-  "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80";
-const img15 =
-  "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80";
-const img16 =
-  "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80";
-const img17 =
-  "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80";
-const img19 =
-  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80";
-const img20 =
-  "https://images.unsplash.com/photo-1558403194-611308249627?auto=format&fit=crop&w=800&q=80";
+// Assets
+const img1 = "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=800&q=80";
+const img2 = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80";
+const img4 = "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80";
+const img7 = "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80";
+const img9 = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80";
 
-const features = [
-  {
-    title: "Co-working Zones",
-    desc: "Collaborative hubs for high-growth teams and solo founders.",
-  },
-  {
-    title: "Innovation Labs",
-    desc: "Equipped with the latest tech for rapid prototyping and R&D.",
-  },
-  {
-    title: "Event Halls",
-    desc: "Stage for demo days, pitch nights, and global summits.",
-  },
-  {
-    title: "Networking Lounges",
-    desc: "Where the next big partnership starts over a coffee.",
-  },
-  {
-    title: "Smart Offices",
-    desc: "Private, tech-enabled suites designed for scale.",
-  },
-  {
-    title: "Incubator Programs",
-    desc: "Intensive 12-week cohorts with industry-leading mentors.",
-  },
-  {
-    title: "Venture Access",
-    desc: "Direct pipelines to top-tier angel and VC networks.",
-  },
-  {
-    title: "Global Network",
-    desc: "Connect with our sister hubs across 20+ countries.",
-  },
-  {
-    title: "Startup Legal",
-    desc: "Expert guidance on IP, equity, and international expansion.",
-  },
-  {
-    title: "Founder Wellness",
-    desc: "In-house gyms, meditation zones, and mental health support.",
-  },
-];
-
-const StartupParkLanding = ({ onNavbarShow }) => {
+const DesignerStartupLanding = () => {
   const containerRef = useRef(null);
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
+  // --- REFINED ANIMATION TIMELINE ---
+  
+  // Navigation
+  const navOpacity = useTransform(scrollYProgress, [0, 0.02], [1, 0.9]);
+  const navScale = useTransform(scrollYProgress, [0, 0.02], [1, 0.98]);
 
-  const progress = scrollYProgress;
+  // Hero Video (Phase 1)
+  const videoScale = useTransform(scrollYProgress, [0, 0.15, 0.35], [1, 0.85, 0.4]);
+  const videoY = useTransform(scrollYProgress, [0.3, 0.55], ["0vh", "-130vh"]);
+  const videoRadius = useTransform(scrollYProgress, [0.05, 0.15], [0, 60]);
 
-  // --- ANIMATION CALCULATIONS ---
-  const heroTextOpacity = useTransform(progress, [0, 0.08], [1, 0]);
-  const heroTextY = useTransform(progress, [0, 0.12], [0, -40]);
+  // Scattered Grid (Phase 2)
+  const gridY = useTransform(scrollYProgress, [0, 1], ["0vh", "-120vh"]);
+  const gridOpacity = useTransform(scrollYProgress, [0, 0.4, 0.6, 0.75], [1, 1, 0.5, 0]);
 
-  // Video transition
-  const videoScale = useTransform(progress, [0.08, 0.35], [1, 0.45]);
-  const videoRadius = useTransform(progress, [0.1, 0.12], [0, 64]);
-  const videoY = useTransform(progress, [0.35, 0.75], ["0%", "-110%"]);
-  const videoOpacity = useTransform(progress, [0.45, 0.55], [1, 0]);
+  // Blueprint (Phase 3: 0.35 - 0.55)
+  const blueprintOpacity = useTransform(scrollYProgress, [0.35, 0.42, 0.5, 0.58], [0, 1, 1, 0]);
+  const blueprintY = useTransform(scrollYProgress, [0.35, 0.42], [60, 0]);
 
-  // Grid animations
-  const gridOpacity = useTransform(
-    progress,
-    [0.2, 0.35, 0.55, 0.6],
-    [0, 1, 1, 0],
-  );
-  const col1Y = useTransform(progress, [0.15, 0.85], ["85vh", "-170vh"]);
-  const col2Y = useTransform(progress, [0.15, 0.85], ["45vh", "-210vh"]);
-  const col4Y = useTransform(progress, [0.15, 0.85], ["65vh", "-180vh"]);
-  const col5Y = useTransform(progress, [0.15, 0.85], ["35vh", "-150vh"]);
+  // Premium Features (Phase 4: 0.58 - 0.75)
+  const featureTitleOpacity = useTransform(scrollYProgress, [0.58, 0.62, 0.72, 0.76], [0, 1, 1, 0]);
+  const featureItem1 = useTransform(scrollYProgress, [0.60, 0.65], [30, 0]);
+  const featureItem2 = useTransform(scrollYProgress, [0.62, 0.67], [30, 0]);
+  const featureItem3 = useTransform(scrollYProgress, [0.64, 0.69], [30, 0]);
+  const featureItem4 = useTransform(scrollYProgress, [0.66, 0.71], [30, 0]);
+  const featureOpacity = useTransform(scrollYProgress, [0.6, 0.65, 0.72, 0.76], [0, 1, 1, 0]);
 
-  const contentOpacity = useTransform(
-    progress,
-    [0.4, 0.48, 0.52, 0.56],
-    [0, 1, 1, 0],
-  );
-  const contentScale = useTransform(progress, [0.4, 0.48], [0.9, 1]);
+  // The Creed (Phase 4.5: 0.76 - 0.86)
+  const creedOpacity = useTransform(scrollYProgress, [0.76, 0.8, 0.84, 0.86], [0, 1, 1, 0]);
+  const creedScale = useTransform(scrollYProgress, [0.76, 0.8], [0.95, 1]);
 
-  // --- ORBITAL PILLARS TRANSITIONS (0.56 - 0.74) ---
-  const orbitalOpacity = useTransform(
-    progress,
-    [0.56, 0.6, 0.7, 0.74],
-    [0, 1, 1, 0],
-  );
-  const pillarScale = useTransform(progress, [0.56, 0.68], [0.4, 1]);
-  const lineDraw = useTransform(progress, [0.58, 0.7], [0, 1]);
-  const p1X = useTransform(progress, [0.56, 0.7], [0, -350]);
-  const p1Y = useTransform(progress, [0.56, 0.7], [0, -180]);
-  const p2X = useTransform(progress, [0.56, 0.7], [0, 350]);
-  const p2Y = useTransform(progress, [0.56, 0.7], [0, -180]);
-  const p3Y = useTransform(progress, [0.56, 0.7], [0, 240]);
+  // Connection/Contact (Phase 5: 0.86 - 0.96)
+  const contactOpacity = useTransform(scrollYProgress, [0.86, 0.9, 0.95, 0.97], [0, 1, 1, 0]);
+  const contactY = useTransform(scrollYProgress, [0.86, 0.9], [40, 0]);
 
-  // --- FEATURED SECTION TRANSITION (0.74 - 0.84) ---
-  const featureImageOpacity = useTransform(
-    progress,
-    [0.74, 0.78, 0.82, 0.84],
-    [0, 1, 1, 0],
-  );
-  const featureImageScale = useTransform(progress, [0.74, 0.8], [0.5, 1.3]);
-  const featureImageX = useTransform(progress, [0.74, 0.8], ["75%", "22%"]);
-  const featureImageY = useTransform(progress, [0.74, 0.8], ["35vh", "0vh"]);
-
-  const featureImage2Opacity = useTransform(
-    progress,
-    [0.76, 0.8, 0.82, 0.84],
-    [0, 1, 1, 0],
-  );
-  const featureImage2Y = useTransform(progress, [0.76, 0.82], ["75vh", "12vh"]);
-  const featureImage2Scale = useTransform(progress, [0.76, 0.82], [0.9, 1.15]);
-
-  const featureTextOpacity = useTransform(
-    progress,
-    [0.76, 0.8, 0.82, 0.84],
-    [0, 1, 1, 0],
-  );
-  const featureTextY = useTransform(progress, [0.76, 0.8], [60, 0]);
-  const featureTextXOffset = useTransform(progress, [0.76, 0.8], [50, 0]);
-
-  // --- WHY STARTUP PARK SECTION - RIBBON DESIGN (0.84 - 0.97) ---
-  const whyOpacity = useTransform(
-    progress,
-    [0.84, 0.88, 0.96, 0.98],
-    [0, 1, 1, 0],
-  );
-  const ribbon1X = useTransform(progress, [0.84, 0.97], ["15%", "-130%"]);
-  const ribbon2X = useTransform(progress, [0.84, 0.97], ["-130%", "15%"]);
-
-  const endTitleOpacity = useTransform(progress, [0.97, 0.99], [0, 1]);
-  const endTitleY = useTransform(progress, [0.97, 0.99], [30, 0]);
-
-  useMotionValueEvent(progress, "change", (v) => {
-    if (onNavbarShow) onNavbarShow(v < 0.02);
-  });
-
-  const columns = [
-    { y: col1Y, images: [img1, img6, img11, img16], left: "2%" },
-    { y: col2Y, images: [img2, img7, img12, img17], left: "22%" },
-    { isVideo: true, left: "50%" },
-    { y: col4Y, images: [img4, img9, img14, img19], left: "78%" },
-    { y: col5Y, images: [img5, img10, img15, img20], left: "95%" },
-  ];
+  // Final Reveal (Phase 6: 0.97 - 1.0)
+  const footerOpacity = useTransform(scrollYProgress, [0.975, 0.99], [0, 1]);
+  const footerScale = useTransform(scrollYProgress, [0.975, 1], [1.05, 1]);
 
   return (
-    <div ref={containerRef} className="relative h-[1000vh] bg-[#f2f2ee]">
+    <div ref={containerRef} className="relative h-[1200vh] bg-[#F7F7F5] text-[#121212]">
       <style>{`
-        .accelerate {
-          will-change: transform, opacity;
-          transform: translate3d(0,0,0);
-        }
-
-        .noise {
-          position: fixed;
-          top: 0; left: 0; width: 100vw; height: 100vh;
-          background: url('https://grainy-gradients.vercel.app/noise.svg');
-          opacity: 0.04;
-          pointer-events: none;
-          z-index: 100;
-        }
-
-        .hero-heading {
-          font-family: 'PP Editorial New', 'Playfair Display', serif;
-          font-size: clamp(3.5rem, 10vw, 9rem);
-          line-height: 0.85;
-          letter-spacing: -0.04em;
-        }
-        .center-text-heading {
-          font-family: 'PP Editorial New', 'Playfair Display', serif;
-          font-size: clamp(2.5rem, 6vw, 4.5rem);
-          font-style: italic;
-          letter-spacing: -0.02em;
-        }
-        .feature-heading {
-          font-family: 'PP Editorial New', 'Playfair Display', serif;
-          font-size: clamp(3rem, 7vw, 5.5rem);
-          line-height: 0.95;
-          letter-spacing: -0.03em;
-        }
-        .why-headline {
-          font-family: 'PP Editorial New', 'Playfair Display', serif;
-          font-size: clamp(5rem, 14vw, 18rem);
-          color: transparent;
-          -webkit-text-stroke: 1.5px rgba(0,0,0,0.06);
-          line-height: 0.7;
-          white-space: nowrap;
-          font-style: italic;
-        }
-        .end-heading {
-          font-family: 'PP Editorial New', 'Playfair Display', serif;
-          font-size: clamp(3rem, 9vw, 7.5rem);
-          letter-spacing: -0.04em;
-        }
-        .glass-pillar {
-          background: rgba(255, 255, 255, 0.4);
-          backdrop-filter: blur(20px) saturate(180%);
-          border: 1px solid rgba(255, 255, 255, 0.5);
-          box-shadow: 
-            0 8px 32px 0 rgba(31, 38, 135, 0.07),
-            inset 0 0 20px rgba(255, 255, 255, 0.3);
-        }
-        .pillar-label {
-          font-family: 'Inter', sans-serif;
-          font-size: 0.75rem;
-          letter-spacing: 0.3em;
-          font-weight: 500;
-          color: #3b82f6;
-        }
-        .pillar-title {
-          font-family: 'PP Editorial New', 'Playfair Display', serif;
-          font-size: 2.8rem;
-          font-weight: 400;
-        }
-        .ribbon-card {
-          background: white;
-          padding: 3.5rem;
-          min-width: 500px;
-          border-radius: 2.5rem;
-          box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.05), 0 18px 36px -18px rgba(0, 0, 0, 0.08);
-          border: 1px solid rgba(0,0,0,0.03);
-          transition: transform 0.3s ease;
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&display=swap');
         
-        @keyframes pulse-blue {
-          0% { transform: scale(1); opacity: 0.6; }
-          50% { transform: scale(2); opacity: 0.2; }
-          100% { transform: scale(1); opacity: 0.6; }
-        }
-        .focal-pulse {
-          animation: pulse-blue 4s infinite ease-in-out;
+        body { 
+          font-family: 'Plus Jakarta Sans', sans-serif; 
+          -webkit-font-smoothing: antialiased; 
+          background: #F7F7F5;
         }
 
-        .tech-blob {
-          filter: blur(80px);
-          opacity: 0.25;
+        .noise-texture {
+          position: fixed;
+          inset: 0;
+          background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+          opacity: 0.05;
+          pointer-events: none;
+          z-index: 1000;
+        }
+
+        .premium-card {
+          background: rgba(255, 255, 255, 0.6);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(0,0,0,0.03);
+          transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .premium-card:hover {
+          transform: translateY(-10px);
+          background: #fff;
+          box-shadow: 0 30px 60px -20px rgba(0,0,0,0.05);
+        }
+
+        .editorial-heading {
+          font-size: clamp(3rem, 8vw, 6.5rem);
+          line-height: 0.9;
+          letter-spacing: -0.05em;
+        }
+
+        .contact-link-large {
+          font-size: clamp(2.5rem, 6vw, 5rem);
+          font-weight: 200;
+          letter-spacing: -0.03em;
+          line-height: 1.1;
+          transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+          color: #121212;
+          display: inline-block;
+        }
+        .contact-link-large:hover {
+          color: #3b82f6;
+          transform: translateX(30px);
+        }
+
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 30s linear infinite;
         }
       `}</style>
 
-      {/* Noise Overlay */}
-      <div className="noise" />
+      <div className="noise-texture" />
+      
+      {/* GLOBAL NAVIGATION */}
+      <Motion.nav 
+        style={{ opacity: navOpacity, scale: navScale }}
+        className="fixed top-10 left-10 right-10 z-[100] flex justify-between items-center"
+      >
+        <div className="text-xl font-bold tracking-tight uppercase">Startup Park.</div>
+        <div className="flex gap-12 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
+          <a href="#" className="hover:text-black transition-colors">Ecosystem</a>
+          <a href="#" className="hover:text-black transition-colors">Programs</a>
+          <a href="#" className="hover:text-black transition-colors">Community</a>
+        </div>
+        <button className="bg-black text-white text-[10px] uppercase tracking-widest px-6 py-3 rounded-full font-bold hover:scale-105 transition-transform">
+          Apply Now
+        </button>
+      </Motion.nav>
 
-      <div className="sticky top-0 h-screen w-full overflow-hidden no-scrollbar">
-        {/* HERO VIDEO */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
+        
+        {/* PHASE 1: THE HERO CORE */}
         <Motion.div
-          style={{
-            scale: videoScale,
-            borderRadius: videoRadius,
-            y: videoY,
-            opacity: videoOpacity,
-          }}
-          className="accelerate absolute inset-0 z-20 flex items-center justify-center overflow-hidden bg-black shadow-[0_40px_100px_-20px_rgba(0,0,0,0.4)]"
+          style={{ scale: videoScale, borderRadius: videoRadius, y: videoY }}
+          className="absolute inset-0 z-20 overflow-hidden bg-[#121212] flex items-center justify-center origin-center shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)]"
         >
           <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
+            autoPlay loop muted playsInline
             onLoadedData={() => setIsVideoReady(true)}
-            className={`w-full h-full object-cover pointer-events-none transition-opacity duration-700 ${isVideoReady ? "opacity-70" : "opacity-0"}`}
+            className={`w-full h-full object-cover transition-opacity duration-1500 ${isVideoReady ? "opacity-40" : "opacity-0"}`}
           >
-            <source
-              src="/Startup_Festival_2025_Teaser_Video_Day_1_Inauguration_Day_2160P.mp4"
-              type="video/mp4"
-            />
+            <source src="/Startup_Festival_2025_Teaser_Video_Day_1_Inauguration_Day_2160P.mp4" type="video/mp4" />
           </video>
-
-          <Motion.div
-            style={{ opacity: heroTextOpacity, y: heroTextY }}
-            className="accelerate absolute inset-0 flex items-end justify-start text-left p-12 md:p-24 text-white"
-          >
-            <h1 className="hero-heading drop-shadow-2xl">
-              Innovate.
-              <br />
-              Elevate.
-              <br />
-              Create.
-            </h1>
+          
+          <Motion.div className="absolute text-center px-6">
+            <h1 className="text-white editorial-heading font-semibold mb-6 uppercase">INDIA’S LAUNCHPAD<br/>FOR FOUNDERS.</h1>
+            <div className="flex items-center justify-center gap-4">
+              <div className="h-[1px] w-12 bg-blue-500" />
+              <span className="text-blue-500 font-mono text-xs uppercase tracking-[0.4em]">Innovate → Accelerate → Succeed</span>
+              <div className="h-[1px] w-12 bg-blue-500" />
+            </div>
           </Motion.div>
         </Motion.div>
 
-        {/* PARALLAX GRID */}
-        <Motion.div
-          style={{ opacity: gridOpacity }}
-          className="accelerate absolute inset-0 z-10"
-        >
-          {columns.map(
-            (col, i) =>
-              !col.isVideo && (
-                <Motion.div
-                  key={i}
-                  style={{ y: col.y, left: col.left, x: "-50%" }}
-                  className="accelerate absolute top-0 flex flex-col gap-20 w-[17vw]"
-                >
-                  {col.images.map((src, idx) => (
-                    <div
-                      key={idx}
-                      className="w-full aspect-[4/5] bg-[#e6e6e2] rounded-[2.5rem] overflow-hidden shadow-sm"
-                    >
-                      <img
-                        src={src}
-                        alt=""
-                        className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700"
-                        decoding="async"
-                        loading="lazy"
-                      />
-                    </div>
-                  ))}
-                </Motion.div>
-              ),
-          )}
+        {/* PHASE 2: PARALLAX BACKGROUND GRID */}
+        <Motion.div style={{ opacity: gridOpacity, y: gridY }} className="absolute inset-0 z-10 pointer-events-none">
+          {[
+            { src: img1, t: "10%", l: "5%", s: 300, r: -5 },
+            { src: img2, t: "15%", l: "70%", s: 350, r: 8 },
+            { src: img4, t: "55%", l: "8%", s: 280, r: -12 },
+            { src: img7, t: "60%", l: "75%", s: 320, r: 5 },
+            { src: img9, t: "40%", l: "40%", s: 200, r: 15 },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              style={{ top: item.t, left: item.l, width: item.s, rotate: `${item.r}deg` }}
+              className="absolute grayscale opacity-20 filter blur-[1px]"
+            >
+              <img src={item.src} className="w-full h-auto rounded-3xl" alt="" />
+            </div>
+          ))}
         </Motion.div>
 
-        {/* ROAD CONTENT OVERLAY */}
+        {/* PHASE 3: THE MISSION STATEMENT */}
         <Motion.div 
-          style={{ opacity: contentOpacity }}
-          className="accelerate absolute inset-0 z-[25] pointer-events-none"
+          style={{ opacity: blueprintOpacity, y: blueprintY }}
+          className="absolute inset-0 flex flex-col items-center justify-center z-30 px-6 text-center"
         >
-          {/* Subtle Background Wash & Blur */}
-          <div className="absolute inset-0 bg-[#f2f2ee]/40 backdrop-blur-xl" />
-
-          <Motion.div 
-            style={{ scale: contentScale }}
-            className="relative h-full w-full flex items-center justify-center px-6"
-          >
-            <div className="max-w-4xl text-center">
-              <h2 className="center-text-heading text-gray-900 mb-10 leading-[1.1]">The new blueprint for<br/>high-impact growth.</h2>
-              <div className="w-24 h-[1px] bg-gray-300 mx-auto mb-10" />
-              <p className="text-xl md:text-3xl text-gray-500 font-light leading-relaxed max-w-2xl mx-auto">
-                We provide the network, capital, and infrastructure. You bring the grit.
-              </p>
-            </div>
-          </Motion.div>
-        </Motion.div>
-
-        {/* ORBITAL PILLARS DESIGN */}
-        <Motion.div
-          style={{ opacity: orbitalOpacity }}
-          className="accelerate absolute inset-0 z-[40] flex items-center justify-center pointer-events-none"
-        >
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-100/30 rounded-full tech-blob animate-float" />
-          <div
-            className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-indigo-100/20 rounded-full tech-blob"
-            style={{ animation: "float 12s infinite ease-in-out reverse" }}
-          />
-
-          <div className="relative w-[1000px] h-[700px] flex items-center justify-center">
-            <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
-              <Motion.path
-                d="M 500 350 L 150 170 M 500 350 L 850 170 M 500 350 L 500 590"
-                stroke="#3b82f6"
-                strokeWidth="1"
-                fill="none"
-                strokeDasharray="8,8"
-                style={{ pathLength: lineDraw, opacity: 0.4 }}
-              />
-            </svg>
-
-            <Motion.div
-              style={{ x: p1X, y: p1Y, scale: pillarScale }}
-              className="absolute glass-pillar w-72 h-72 rounded-full flex flex-col items-center justify-center p-10 text-center"
-            >
-              <span className="pillar-label mb-3">01 / CONCEPT</span>
-              <h3 className="pillar-title text-gray-900 italic">Innovate.</h3>
-              <p className="text-gray-400 text-xs mt-4 uppercase tracking-widest leading-relaxed">
-                Radical thinking
-                <br />
-                Applied logic
-              </p>
-            </Motion.div>
-
-            <Motion.div
-              style={{ x: p2X, y: p2Y, scale: pillarScale }}
-              className="absolute glass-pillar w-72 h-72 rounded-full flex flex-col items-center justify-center p-10 text-center"
-            >
-              <span className="pillar-label mb-3">02 / VELOCITY</span>
-              <h3 className="pillar-title text-gray-900">Elevate.</h3>
-              <p className="text-gray-400 text-xs mt-4 uppercase tracking-widest leading-relaxed">
-                Strategic growth
-                <br />
-                Global reach
-              </p>
-            </Motion.div>
-
-            <Motion.div
-              style={{ x: 0, y: p3Y, scale: pillarScale }}
-              className="absolute glass-pillar w-72 h-72 rounded-full flex flex-col items-center justify-center p-10 text-center"
-            >
-              <span className="pillar-label mb-3">03 / REALITY</span>
-              <h3 className="pillar-title text-gray-900 italic">Create.</h3>
-              <p className="text-gray-400 text-xs mt-4 uppercase tracking-widest leading-relaxed">
-                Precision build
-                <br />
-                Market impact
-              </p>
-            </Motion.div>
-
-            <div className="relative">
-              <div className="w-6 h-6 bg-blue-600 rounded-full z-20 relative shadow-[0_0_20px_rgba(59,130,246,0.5)]" />
-              <div className="absolute -inset-4 bg-blue-400 rounded-full focal-pulse z-10" />
-            </div>
-          </div>
-        </Motion.div>
-
-        {/* FEATURED STORY SECTION */}
-        <Motion.div className="accelerate absolute inset-0 z-[30] pointer-events-none flex items-center justify-center">
-          <Motion.div
-            style={{
-              x: "-50%",
-              y: "-50%",
-              left: featureImageX,
-              top: "50%",
-              scale: featureImageScale,
-              translateY: featureImageY,
-              opacity: featureImageOpacity,
-            }}
-            className="absolute w-[18vw] aspect-[4/5] bg-gray-200 rounded-[3rem] overflow-hidden shadow-2xl z-0"
-          >
-            <img src={img9} alt="" className="w-full h-full object-cover" />
-          </Motion.div>
-
-          <Motion.div
-            style={{
-              x: "-50%",
-              y: "-50%",
-              left: "40%",
-              top: "50%",
-              translateY: featureImage2Y,
-              scale: featureImage2Scale,
-              opacity: featureImage2Opacity,
-            }}
-            className="absolute w-[16vw] aspect-[4/5] bg-white rounded-[3rem] overflow-hidden shadow-2xl z-10 border-[12px] border-white"
-          >
-            <img
-              src={img14}
-              alt=""
-              className="w-full h-full object-cover grayscale-[30%]"
-            />
-          </Motion.div>
-
-          <Motion.div
-            style={{
-              opacity: featureTextOpacity,
-              y: featureTextY,
-              x: featureTextXOffset,
-            }}
-            className="absolute left-[62%] translate-x-0 max-w-xl text-left"
-          >
-            <h2 className="feature-heading text-gray-900 mb-8">
-              Architects of
-              <br />
-              the future.
-            </h2>
-            <p className="text-xl md:text-2xl text-gray-400 font-light leading-relaxed">
-              We are not just a space; we are an engine for world-changing
-              ideas. From seed to scale, we provide the octane for your
-              ambition.
-            </p>
-            <div className="mt-12 w-16 h-[2px] bg-blue-500" />
-          </Motion.div>
-        </Motion.div>
-
-        {/* WHY STARTUP PARK SECTION */}
-        <Motion.div
-          style={{ opacity: whyOpacity }}
-          className="accelerate absolute inset-0 z-[60] flex flex-col justify-center overflow-hidden bg-[#f2f2ee]"
-        >
-          <div className="absolute inset-0 flex flex-col justify-center items-center pointer-events-none opacity-[0.07]">
-            <Motion.h2 style={{ x: ribbon1X }} className="why-headline">
-              STARTUP PARK • STARTUP PARK • STARTUP PARK
-            </Motion.h2>
-            <Motion.h2 style={{ x: ribbon2X }} className="why-headline">
-              THE ECOSYSTEM • THE ECOSYSTEM • THE ECOSYSTEM
-            </Motion.h2>
+          {/* Decorative Ghost Background */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+            <span className="text-[30vw] font-bold text-black/[0.02] select-none uppercase tracking-tighter">Mission</span>
           </div>
 
-          <div className="relative z-10 space-y-16">
-            <Motion.div style={{ x: ribbon1X }} className="flex gap-10 px-16">
-              {features.slice(0, 5).map((f, i) => (
-                <div key={i} className="ribbon-card group">
-                  <div className="flex items-center justify-between mb-8">
-                    <span className="text-blue-500 font-mono text-sm tracking-[0.3em] uppercase">
-                      Phase {i + 1}
-                    </span>
-                    <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors duration-300">
-                      →
-                    </div>
-                  </div>
-                  <h4
-                    className="text-4xl font-normal text-gray-900 mb-6 tracking-tight italic"
-                    style={{ fontFamily: "'PP Editorial New', serif" }}
-                  >
-                    {f.title}
-                  </h4>
-                  <p className="text-gray-400 font-light leading-relaxed text-lg">
-                    {f.desc}
-                  </p>
-                </div>
-              ))}
-            </Motion.div>
-
-            <Motion.div style={{ x: ribbon2X }} className="flex gap-10 px-16">
-              {features.slice(5, 10).map((f, i) => (
-                <div key={i} className="ribbon-card group">
-                  <div className="flex items-center justify-between mb-8">
-                    <span className="text-blue-500 font-mono text-sm tracking-[0.3em] uppercase">
-                      Phase {i + 6}
-                    </span>
-                    <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors duration-300">
-                      →
-                    </div>
-                  </div>
-                  <h4
-                    className="text-4xl font-normal text-gray-900 mb-6 tracking-tight italic"
-                    style={{ fontFamily: "'PP Editorial New', serif" }}
-                  >
-                    {f.title}
-                  </h4>
-                  <p className="text-gray-400 font-light leading-relaxed text-lg">
-                    {f.desc}
-                  </p>
-                </div>
-              ))}
-            </Motion.div>
-          </div>
-        </Motion.div>
-
-        {/* FINAL END TITLE */}
-        <Motion.div
-          style={{ opacity: endTitleOpacity, y: endTitleY }}
-          className="accelerate absolute inset-0 z-0 flex flex-col items-center justify-center text-center p-6 bg-[#f2f2ee]"
-        >
-          <h2 className="end-heading text-gray-900 mb-10 leading-none">
-            The Academy of
-            <br />
-            Ambition.
+          <span className="text-blue-600 font-bold text-[10px] uppercase tracking-[0.5em] mb-10 relative z-10">Our Mission — 01</span>
+          <h2 className="text-6xl md:text-8xl font-light tracking-tighter max-w-5xl leading-[0.9] mb-12 relative z-10">
+            The world’s first <br/><span className="text-gray-300 italic">comprehensive ecosystem</span> for builders.
           </h2>
-          <Motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-10 py-5 bg-black text-white rounded-full text-lg font-medium tracking-tight shadow-xl hover:bg-gray-800 transition-all duration-300"
-          >
-            Apply for Cohort '26
-          </Motion.button>
+          <p className="text-lg md:text-xl text-gray-400 max-w-3xl font-light leading-relaxed mb-16 relative z-10">
+            Startup Park bridges the gap between ambitious ideas and market-ready solutions. 
+            From ideation to IPO, we are your trusted partner in building the future of India's economy.
+          </p>
+          
+          <div className="flex flex-wrap justify-center gap-12 md:gap-20 relative z-10">
+            <div className="text-left border-l border-gray-100 pl-6">
+              <span className="text-3xl md:text-4xl font-bold block">200+</span>
+              <span className="text-[10px] uppercase tracking-widest text-gray-400">Startups Supported</span>
+            </div>
+            <div className="text-left border-l border-gray-100 pl-6">
+              <span className="text-3xl md:text-4xl font-bold block">₹600 Cr+</span>
+              <span className="text-[10px] uppercase tracking-widest text-gray-400">Funding Accessed</span>
+            </div>
+            <div className="text-left border-l border-gray-100 pl-6">
+              <span className="text-3xl md:text-4xl font-bold block">10,000+</span>
+              <span className="text-[10px] uppercase tracking-widest text-gray-400">Jobs Created</span>
+            </div>
+          </div>
         </Motion.div>
+
+        {/* PHASE 4: THE ECOSYSTEM GRID */}
+        <Motion.div 
+          style={{ opacity: featureOpacity }}
+          className="absolute inset-0 z-[40] px-10 md:px-20 flex flex-col justify-center"
+        >
+          {/* Subtle Background Accent */}
+          <div className="absolute top-[20%] right-[10%] w-96 h-96 bg-blue-50/50 rounded-full blur-[120px] pointer-events-none" />
+
+          <Motion.div style={{ opacity: featureTitleOpacity }} className="mb-12 md:mb-20">
+            <span className="text-blue-600 font-bold text-[10px] uppercase tracking-[0.5em] mb-4 block text-center md:text-left">Infrastructure — 02</span>
+            <h3 className="text-4xl md:text-6xl font-medium tracking-tight text-center md:text-left">World-Class Facilities.</h3>
+          </Motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 relative z-10">
+            {[
+              { title: "Co-working Zones", desc: "Premium collaborative spaces for high-growth founders.", y: featureItem1 },
+              { title: "Innovation Labs", desc: "Equipped with the latest tech for rapid R&D suites.", y: featureItem2 },
+              { title: "Incubators", desc: "Strategic mentorship and intensive development programs.", y: featureItem3 },
+              { title: "Event Halls", desc: "Stage for demo days and global startup summits.", y: featureItem4 },
+            ].map((f, i) => (
+              <Motion.div 
+                key={i} 
+                style={{ y: f.y }}
+                className="premium-card p-8 md:p-10 rounded-[30px] md:rounded-[40px] flex flex-col justify-between h-[300px] md:h-[350px]"
+              >
+                <div>
+                  <span className="text-[10px] font-bold text-blue-500 mb-6 block">0{i+1}</span>
+                  <h4 className="text-xl md:text-2xl font-semibold mb-4 tracking-tight">{f.title}</h4>
+                  <p className="text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                  <span className="text-[9px] uppercase tracking-widest font-bold text-gray-300">Ready for Launch</span>
+                </div>
+              </Motion.div>
+            ))}
+          </div>
+        </Motion.div>
+
+        {/* PHASE 4.5: THE CREED */}
+        <Motion.div 
+          style={{ opacity: creedOpacity, scale: creedScale }}
+          className="absolute inset-0 z-[45] flex flex-col items-center justify-center px-10 text-center"
+        >
+          {/* Decorative Elements */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl aspect-video border border-black/[0.03] rounded-full pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl aspect-square border border-black/[0.02] rounded-full pointer-events-none" />
+
+          <div className="max-w-4xl relative z-10">
+            <h2 className="text-4xl md:text-7xl font-semibold tracking-tighter leading-[1.1] mb-12">
+              "We don't just host startups. <br/>
+              <span className="text-blue-600">We engineer the future</span> <br/>
+              of the Indian entrepreneur."
+            </h2>
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-lg">
+                <img src={img9} className="w-full h-full object-cover" alt="Founder" />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em]">Vision Statement 2025</span>
+            </div>
+          </div>
+        </Motion.div>
+
+        {/* PHASE 5: THE CONNECTION HUB */}
+        <Motion.div 
+          style={{ opacity: contactOpacity, y: contactY }}
+          className="absolute inset-0 z-[50] flex flex-col justify-center px-10 md:px-32 bg-white"
+        >
+          {/* Floating Pill Accents */}
+          <div className="absolute top-[15%] right-[20%] floating-pill opacity-40 rotate-12">HQ: Bengaluru</div>
+          <div className="absolute bottom-[20%] left-[15%] floating-pill opacity-40 -rotate-6">Status: Operational</div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-end relative z-10">
+            <div className="lg:col-span-7">
+              <span className="text-blue-600 font-bold text-[10px] uppercase tracking-[0.5em] mb-12 block">Connect — 03</span>
+              <div className="flex flex-col gap-6">
+                <a href="mailto:contact@thestartuppark.com" className="contact-link-large group">
+                  Say Hello <span className="text-gray-200 group-hover:text-blue-200 transition-colors">—</span>
+                </a>
+                <a href="#" className="contact-link-large group">
+                  Partner with Us <span className="text-gray-200 group-hover:text-blue-200 transition-colors">—</span>
+                </a>
+                <a href="#" className="contact-link-large group">
+                  Find our Office <span className="text-gray-200 group-hover:text-blue-200 transition-colors">—</span>
+                </a>
+              </div>
+            </div>
+            <div className="lg:col-span-5 pb-4">
+              <div className="p-10 bg-[#F7F7F5] rounded-[40px] shadow-sm space-y-8 border border-black/5">
+                <div>
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Location</span>
+                  <p className="text-lg font-medium">Bengaluru, KA, India</p>
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Availability</span>
+                  <p className="text-lg font-medium">Cohort '26: Open for screening</p>
+                </div>
+                <div className="pt-6 border-t border-gray-200 flex gap-4">
+                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-xs font-bold border border-black/5 cursor-pointer hover:bg-black hover:text-white transition-all shadow-sm">TW</div>
+                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-xs font-bold border border-black/5 cursor-pointer hover:bg-black hover:text-white transition-all shadow-sm">LI</div>
+                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-xs font-bold border border-black/5 cursor-pointer hover:bg-black hover:text-white transition-all shadow-sm">IG</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Motion.div>
+
       </div>
+
+      {/* PHASE 6: THE FINAL REVEAL */}
+      <Motion.div 
+        style={{ opacity: footerOpacity, scale: footerScale }}
+        className="fixed inset-0 z-[200] bg-black text-white flex flex-col items-center justify-center overflow-hidden"
+      >
+         {/* Background Marquee */}
+         <div className="absolute top-1/2 -translate-y-1/2 left-0 w-[200%] flex whitespace-nowrap opacity-[0.03] pointer-events-none select-none">
+           <div className="animate-marquee text-[30vh] font-bold flex">
+             <span className="px-20">THE STARTUP PARK</span>
+             <span className="px-20">INDIA'S LAUNCHPAD</span>
+             <span className="px-20">THE STARTUP PARK</span>
+             <span className="px-20">INDIA'S LAUNCHPAD</span>
+           </div>
+         </div>
+
+         <div className="relative z-10 flex flex-col items-center text-center px-6">
+           <span className="text-blue-500 font-mono text-[10px] uppercase tracking-[0.6em] mb-10">End of Deployment</span>
+           <Motion.h2 
+             className="text-[12vw] font-bold tracking-tighter leading-none mb-16 uppercase"
+           >
+             SUCCEED.
+           </Motion.h2>
+           
+           <div className="flex flex-col items-center gap-10">
+             <button className="group relative bg-white text-black px-16 py-8 rounded-full font-bold text-xl overflow-hidden transition-all duration-500 hover:scale-110 shadow-[0_20px_60px_-15px_rgba(255,255,255,0.2)]">
+               <span className="relative z-10">Enter the Ecosystem</span>
+               <div className="absolute inset-0 bg-blue-600 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
+             </button>
+             
+             <div className="flex items-center gap-6">
+               <div className="w-12 h-[1px] bg-gray-800" />
+               <p className="text-gray-600 font-mono text-[10px] uppercase tracking-[0.5em]">startup.park — © 2026</p>
+               <div className="w-12 h-[1px] bg-gray-800" />
+             </div>
+           </div>
+         </div>
+      </Motion.div>
     </div>
   );
 };
 
-export default StartupParkLanding;
+export default DesignerStartupLanding;
