@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { NavLink } from 'react-router-dom';
 
 const navItems = [
   { name: 'Home', path: '/' },
   { name: 'About', path: '/about' },
+  { name: 'Services', path: '/services' },
   { name: 'Contact', path: '/contact' },
 ];
 
@@ -25,9 +27,9 @@ const ClassyNavbar = ({ show = true }) => {
               const isHovered = hovered === idx;
 
               return (
-                <a
+                <NavLink
                   key={item.name}
-                  href={item.path}
+                  to={item.path}
                   onMouseEnter={() => setHovered(idx)}
                   onMouseLeave={() => setHovered(null)}
                   className="relative px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.2em] transition-colors duration-300"
@@ -47,7 +49,7 @@ const ClassyNavbar = ({ show = true }) => {
                   </AnimatePresence>
 
                   <span className="relative z-10">{item.name}</span>
-                </a>
+                </NavLink>
               );
             })}
           </div>
