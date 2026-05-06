@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+﻿import React, { useRef, useState } from "react";
 import {
   motion as Motion,
   useScroll,
   useTransform,
   useSpring,
 } from "framer-motion";
+import AudienceUtilitySection from "../components/AudienceUtilitySection";
 
 // Assets
 const img1 =
@@ -85,38 +86,6 @@ const mapStops = [
   },
 ];
 
-const audienceCards = [
-  {
-    title: "Startups",
-    text: "Set up, validate, hire, build traction, and grow inside a founder-first environment.",
-  },
-  {
-    title: "Entrepreneurs",
-    text: "Turn ideas into companies with support, community, execution and visibility.",
-  },
-  {
-    title: "Founders",
-    text: "Find a serious operating base with access to events, mentors, peers and momentum.",
-  },
-  {
-    title: "Creators",
-    text: "Collaborate with brands, startups and ecosystem builders through energy-rich spaces.",
-  },
-  {
-    title: "Ecosystem Builders",
-    text: "Run programs, activate communities and plug into Bangalore’s startup pulse.",
-  },
-];
-
-const activityHighlights = [
-  "Set up your startup",
-  "Attend events",
-  "Network with founders",
-  "Build your MVP",
-  "Meet investors",
-  "Launch faster",
-];
-
 const programCards = [
   {
     label: "01",
@@ -186,151 +155,158 @@ const DesignerStartupLanding = () => {
   // Hero Video (Phase 1)
   const videoScale = useTransform(
     scrollYProgress,
-    [0, 0.15, 0.35],
-    [1, 0.85, 0.4]
+    [0, 0.02, 0.045],
+    [1, 0.7, 0.38]
   );
-  const videoY = useTransform(scrollYProgress, [0.3, 0.55], ["0vh", "-130vh"]);
-  const videoRadius = useTransform(scrollYProgress, [0.05, 0.15], [0, 60]);
+  const videoY = useTransform(scrollYProgress, [0.015, 0.05], ["0vh", "-120vh"]);
+  const videoRadius = useTransform(scrollYProgress, [0.015, 0.045], [0, 60]);
+  const videoOpacity = useTransform(scrollYProgress, [0.03, 0.055], [1, 0]);
 
   // Scattered Grid (Phase 2)
   const gridY = useTransform(scrollYProgress, [0, 1], ["0vh", "-120vh"]);
   const gridOpacity = useTransform(
     scrollYProgress,
-    [0, 0.4, 0.6, 0.75],
-    [1, 1, 0.5, 0]
+    [0, 0.015, 0.03, 0.055],
+    [1, 1, 0.55, 0]
   );
 
   // PHASE 3: Mission
   const blueprintOpacity = useTransform(
     scrollYProgress,
-    [0.35, 0.4, 0.52, 0.58],
+    [0.045, 0.065, 0.18, 0.24],
     [0, 1, 1, 0]
   );
-  const blueprintY = useTransform(scrollYProgress, [0.35, 0.42], [60, 0]);
+  const blueprintY = useTransform(scrollYProgress, [0.045, 0.08], [60, 0]);
   const pathLength = useSpring(
-    useTransform(scrollYProgress, [0.35, 0.55], [0, 1]),
+    useTransform(scrollYProgress, [0.05, 0.16], [0, 1]),
     { stiffness: 60, damping: 15 }
   );
   const missionHeadingColor = useTransform(
     scrollYProgress,
-    [0.4, 0.5],
+    [0.06, 0.14],
     ["#4b5563", "#ffffff"]
   );
   const missionSubtextColor = useTransform(
     scrollYProgress,
-    [0.42, 0.52],
+    [0.08, 0.16],
     ["#374151", "#9ca3af"]
   );
   const missionStatColor = useTransform(
     scrollYProgress,
-    [0.45, 0.55],
+    [0.1, 0.18],
     ["#1f2937", "#ffffff"]
   );
 
   // PHASE 4: Google-map style section
   const mapSectionOpacity = useTransform(
     scrollYProgress,
-    [0.58, 0.61, 0.72, 0.75],
+    [0.22, 0.26, 0.39, 0.43],
     [0, 1, 1, 0]
   );
-  const mapSectionY = useTransform(scrollYProgress, [0.58, 0.62], [50, 0]);
+  const mapSectionY = useTransform(scrollYProgress, [0.22, 0.26], [50, 0]);
   const mapHeaderOpacity = useTransform(
     scrollYProgress,
-    [0.59, 0.62, 0.71, 0.74],
+    [0.23, 0.26, 0.38, 0.42],
     [0, 1, 1, 0]
   );
+  const mapHeaderY = useTransform(scrollYProgress, [0.23, 0.26], [24, 0]);
+  const mapHeaderScale = useTransform(scrollYProgress, [0.23, 0.26], [0.98, 1]);
 
   const mapPanX = useSpring(
     useTransform(
       scrollYProgress,
-      [0.6, 0.615, 0.63, 0.645, 0.66, 0.675, 0.69, 0.705, 0.72],
-      ["0%", "-4%", "3%", "-5%", "4%", "-3%", "5%", "-2%", "0%"]
+      [0.24, 0.255, 0.27, 0.285, 0.3, 0.315, 0.33, 0.345, 0.36],
+      ["0%", "-0.8%", "0.5%", "-1%", "0.8%", "-0.6%", "0.9%", "-0.4%", "0%"]
     ),
-    { stiffness: 80, damping: 18 }
+    { stiffness: 42, damping: 36 }
   );
 
   const mapPanY = useSpring(
     useTransform(
       scrollYProgress,
-      [0.6, 0.615, 0.63, 0.645, 0.66, 0.675, 0.69, 0.705, 0.72],
-      ["0%", "-6%", "2%", "-5%", "3%", "-4%", "2%", "-3%", "0%"]
+      [0.24, 0.255, 0.27, 0.285, 0.3, 0.315, 0.33, 0.345, 0.36],
+      ["0%", "-0.7%", "0.4%", "-0.9%", "0.7%", "-0.5%", "0.8%", "-0.3%", "0%"]
     ),
-    { stiffness: 80, damping: 18 }
+    { stiffness: 42, damping: 36 }
   );
+  const mapSurfaceY = useTransform(scrollYProgress, [0.24, 0.28], [16, 0]);
+  const mapSurfaceScale = useTransform(scrollYProgress, [0.24, 0.28], [0.99, 1]);
+  const mapSurfaceGlow = useTransform(scrollYProgress, [0.24, 0.32], [0.84, 1]);
 
   const routeProgress = useSpring(
-    useTransform(scrollYProgress, [0.6, 0.71], [0, 1]),
+    useTransform(scrollYProgress, [0.24, 0.34], [0, 1]),
     { stiffness: 100, damping: 18 }
   );
 
+  const routeOrbX = useTransform(
+    scrollYProgress,
+    [0.24, 0.255, 0.27, 0.285, 0.3, 0.315, 0.33, 0.345, 0.36],
+    ["18%", "42%", "72%", "58%", "26%", "46%", "76%", "60%", "60%"]
+  );
+  const routeOrbY = useTransform(
+    scrollYProgress,
+    [0.24, 0.255, 0.27, 0.285, 0.3, 0.315, 0.33, 0.345, 0.36],
+    ["18%", "28%", "22%", "48%", "56%", "66%", "70%", "84%", "84%"]
+  );
+  const routeOrbScale = useTransform(scrollYProgress, [0.24, 0.28, 0.34], [0.7, 1, 0.92]);
+  const routeOrbGlow = useTransform(scrollYProgress, [0.24, 0.28, 0.34], [0.6, 1, 0.88]);
+
   const stopsTrackY = useSpring(
-    useTransform(scrollYProgress, [0.6, 0.71], [0, -756]),
+    useTransform(scrollYProgress, [0.24, 0.34], [0, -756]),
     { stiffness: 90, damping: 18 }
   );
 
-  const pin1Scale = useTransform(scrollYProgress, [0.595, 0.605, 0.615], [1, 1.28, 1]);
-  const pin2Scale = useTransform(scrollYProgress, [0.61, 0.62, 0.63], [1, 1.28, 1]);
-  const pin3Scale = useTransform(scrollYProgress, [0.625, 0.635, 0.645], [1, 1.28, 1]);
-  const pin4Scale = useTransform(scrollYProgress, [0.64, 0.65, 0.66], [1, 1.28, 1]);
-  const pin5Scale = useTransform(scrollYProgress, [0.655, 0.665, 0.675], [1, 1.28, 1]);
-  const pin6Scale = useTransform(scrollYProgress, [0.67, 0.68, 0.69], [1, 1.28, 1]);
-  const pin7Scale = useTransform(scrollYProgress, [0.685, 0.695, 0.705], [1, 1.28, 1]);
-  const pin8Scale = useTransform(scrollYProgress, [0.7, 0.71, 0.72], [1, 1.28, 1]);
+  const pin1Scale = useTransform(scrollYProgress, [0.24, 0.25, 0.26], [1, 1.28, 1]);
+  const pin2Scale = useTransform(scrollYProgress, [0.255, 0.265, 0.275], [1, 1.28, 1]);
+  const pin3Scale = useTransform(scrollYProgress, [0.27, 0.28, 0.29], [1, 1.28, 1]);
+  const pin4Scale = useTransform(scrollYProgress, [0.285, 0.295, 0.305], [1, 1.28, 1]);
+  const pin5Scale = useTransform(scrollYProgress, [0.3, 0.31, 0.32], [1, 1.28, 1]);
+  const pin6Scale = useTransform(scrollYProgress, [0.315, 0.325, 0.335], [1, 1.28, 1]);
+  const pin7Scale = useTransform(scrollYProgress, [0.33, 0.34, 0.35], [1, 1.28, 1]);
+  const pin8Scale = useTransform(scrollYProgress, [0.345, 0.355, 0.365], [1, 1.28, 1]);
 
-  const pin1Opacity = useTransform(scrollYProgress, [0.595, 0.605, 0.615], [0.7, 1, 0.7]);
-  const pin2Opacity = useTransform(scrollYProgress, [0.61, 0.62, 0.63], [0.7, 1, 0.7]);
-  const pin3Opacity = useTransform(scrollYProgress, [0.625, 0.635, 0.645], [0.7, 1, 0.7]);
-  const pin4Opacity = useTransform(scrollYProgress, [0.64, 0.65, 0.66], [0.7, 1, 0.7]);
-  const pin5Opacity = useTransform(scrollYProgress, [0.655, 0.665, 0.675], [0.7, 1, 0.7]);
-  const pin6Opacity = useTransform(scrollYProgress, [0.67, 0.68, 0.69], [0.7, 1, 0.7]);
-  const pin7Opacity = useTransform(scrollYProgress, [0.685, 0.695, 0.705], [0.7, 1, 0.7]);
-  const pin8Opacity = useTransform(scrollYProgress, [0.7, 0.71, 0.72], [0.7, 1, 0.7]);
+  const pin1Opacity = useTransform(scrollYProgress, [0.24, 0.25, 0.26], [0.7, 1, 0.7]);
+  const pin2Opacity = useTransform(scrollYProgress, [0.255, 0.265, 0.275], [0.7, 1, 0.7]);
+  const pin3Opacity = useTransform(scrollYProgress, [0.27, 0.28, 0.29], [0.7, 1, 0.7]);
+  const pin4Opacity = useTransform(scrollYProgress, [0.285, 0.295, 0.305], [0.7, 1, 0.7]);
+  const pin5Opacity = useTransform(scrollYProgress, [0.3, 0.31, 0.32], [0.7, 1, 0.7]);
+  const pin6Opacity = useTransform(scrollYProgress, [0.315, 0.325, 0.335], [0.7, 1, 0.7]);
+  const pin7Opacity = useTransform(scrollYProgress, [0.33, 0.34, 0.35], [0.7, 1, 0.7]);
+  const pin8Opacity = useTransform(scrollYProgress, [0.345, 0.355, 0.365], [0.7, 1, 0.7]);
 
   // Creed
   const creedOpacity = useTransform(
     scrollYProgress,
-    [0.72, 0.75, 0.79, 0.81],
+    [0.43, 0.47, 0.55, 0.59],
     [0, 1, 1, 0]
   );
-  const creedScale = useTransform(scrollYProgress, [0.72, 0.76], [0.95, 1]);
-
-  // New content sections
-  const audienceOpacity = useTransform(
-    scrollYProgress,
-    [0.79, 0.82, 0.87, 0.89],
-    [0, 1, 1, 0]
-  );
-  const audienceY = useTransform(scrollYProgress, [0.79, 0.83], [50, 0]);
-  const audienceParallax = useSpring(
-    useTransform(scrollYProgress, [0.79, 0.89], [30, -30]),
-    { stiffness: 90, damping: 18 }
-  );
+  const creedScale = useTransform(scrollYProgress, [0.43, 0.47], [0.95, 1]);
 
   const offeringsOpacity = useTransform(
     scrollYProgress,
-    [0.87, 0.9, 0.94, 0.955],
+    [0.74, 0.78, 0.9, 0.94],
     [0, 1, 1, 0]
   );
-  const offeringsY = useTransform(scrollYProgress, [0.87, 0.91], [50, 0]);
+  const offeringsY = useTransform(scrollYProgress, [0.74, 0.78], [50, 0]);
 
   const ecosystemOpacity = useTransform(
     scrollYProgress,
-    [0.94, 0.955, 0.985, 0.992],
+    [0.88, 0.92, 1, 1],
     [0, 1, 1, 0]
   );
-  const ecosystemY = useTransform(scrollYProgress, [0.94, 0.96], [40, 0]);
+  const ecosystemY = useTransform(scrollYProgress, [0.88, 0.92], [40, 0]);
 
   // Contact
   const contactOpacity = useTransform(
     scrollYProgress,
-    [0.982, 0.988, 0.995, 0.998],
+    [0.84, 0.87, 0.94, 0.98],
     [0, 1, 1, 0]
   );
-  const contactY = useTransform(scrollYProgress, [0.982, 0.989], [40, 0]);
+  const contactY = useTransform(scrollYProgress, [0.84, 0.88], [40, 0]);
 
   // Final reveal
-  const footerOpacity = useTransform(scrollYProgress, [0.997, 0.9995], [0, 1]);
-  const footerScale = useTransform(scrollYProgress, [0.997, 1], [1.05, 1]);
+  const footerOpacity = useTransform(scrollYProgress, [0.94, 0.99], [0, 1]);
+  const footerScale = useTransform(scrollYProgress, [0.94, 1], [1.05, 1]);
 
   const pinScales = [
     pin1Scale,
@@ -355,23 +331,22 @@ const DesignerStartupLanding = () => {
   ];
 
   return (
-    <div ref={containerRef} className="relative h-[1800vh] bg-[#F7F7F5] text-[#121212]">
+    <div ref={containerRef} className="relative h-[1800vh] bg-transparent text-[#121212]">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
 
         body {
           font-family: 'Plus Jakarta Sans', sans-serif;
           -webkit-font-smoothing: antialiased;
-          background: #F7F7F5;
         }
 
-        .noise-texture {
-          position: fixed;
+        .hero-noise {
+          position: absolute;
           inset: 0;
           background-image: url('https://grainy-gradients.vercel.app/noise.svg');
           opacity: 0.05;
           pointer-events: none;
-          z-index: 1000;
+          z-index: 0;
         }
 
         .premium-card {
@@ -407,18 +382,48 @@ const DesignerStartupLanding = () => {
         }
 
         .map-glass {
-          background: rgba(11, 17, 32, 0.72);
-          backdrop-filter: blur(18px);
-          border: 1px solid rgba(255,255,255,0.08);
-          box-shadow: 0 30px 80px -25px rgba(0,0,0,0.45);
+          position: relative;
+          overflow: hidden;
+          background: linear-gradient(180deg, rgba(14, 22, 40, 0.86), rgba(10, 16, 30, 0.7));
+          backdrop-filter: blur(24px) saturate(1.12);
+          border: 1px solid rgba(255,255,255,0.09);
+          box-shadow: 0 30px 90px -28px rgba(0,0,0,0.55);
+        }
+
+        .map-glass::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 32%);
+          pointer-events: none;
         }
 
         .map-surface {
+          isolation: isolate;
           background:
             radial-gradient(circle at 20% 20%, rgba(59,130,246,0.14), transparent 18%),
             radial-gradient(circle at 80% 30%, rgba(99,102,241,0.14), transparent 20%),
             radial-gradient(circle at 40% 75%, rgba(6,182,212,0.12), transparent 18%),
             linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+        }
+
+        .map-surface::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background:
+            radial-gradient(circle at 50% 34%, rgba(96,165,250,0.16), transparent 28%),
+            radial-gradient(circle at 72% 70%, rgba(34,211,238,0.12), transparent 26%),
+            linear-gradient(180deg, rgba(255,255,255,0.02), transparent 42%);
+          pointer-events: none;
+        }
+
+        .map-surface::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(0,0,0,0.14), transparent 20%, transparent 78%, rgba(0,0,0,0.28));
+          pointer-events: none;
         }
 
         .map-roads {
@@ -479,8 +484,6 @@ const DesignerStartupLanding = () => {
         }
       `}</style>
 
-      <div className="noise-texture" />
-
       {/* GLOBAL NAVIGATION */}
       <Motion.nav
         style={{ opacity: navOpacity, scale: navScale }}
@@ -503,12 +506,18 @@ const DesignerStartupLanding = () => {
         </button>
       </Motion.nav>
 
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+      <div className="sticky top-0 h-screen w-full overflow-visible">
         {/* PHASE 1: THE HERO CORE */}
         <Motion.div
-          style={{ scale: videoScale, borderRadius: videoRadius, y: videoY }}
+          style={{
+            scale: videoScale,
+            borderRadius: videoRadius,
+            y: videoY,
+            opacity: videoOpacity,
+          }}
           className="absolute inset-0 z-20 overflow-hidden bg-[#121212] flex items-center justify-center origin-center shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)]"
         >
+          <div className="hero-noise" />
           <video
             autoPlay
             loop
@@ -561,7 +570,7 @@ const DesignerStartupLanding = () => {
                 width: item.s,
                 rotate: `${item.r}deg`,
               }}
-              className="absolute grayscale opacity-20 filter blur-[1px]"
+              className="absolute grayscale opacity-35 filter blur-0"
             >
               <img src={item.src} className="w-full h-auto rounded-3xl" alt="" />
             </div>
@@ -571,7 +580,7 @@ const DesignerStartupLanding = () => {
         {/* PHASE 3: THE MISSION STATEMENT */}
         <Motion.div
           style={{ opacity: blueprintOpacity, y: blueprintY }}
-          className="absolute inset-0 flex flex-col items-center justify-center z-30 px-6 text-center bg-black"
+          className="absolute inset-0 flex flex-col items-center justify-start z-30 px-6 pt-20 md:pt-16 text-center bg-black"
         >
           <div
             className="absolute inset-0 z-0 opacity-20 pointer-events-none"
@@ -602,13 +611,13 @@ const DesignerStartupLanding = () => {
             </span>
           </div>
 
-          <span className="text-blue-600 font-bold text-[10px] uppercase tracking-[0.5em] mb-10 relative z-20">
+          <span className="text-blue-600 font-bold text-[10px] uppercase tracking-[0.5em] mb-8 relative z-20">
             Our Mission — 01
           </span>
 
           <Motion.h2
             style={{ color: missionHeadingColor }}
-            className="text-6xl md:text-8xl font-light tracking-tighter max-w-5xl leading-[0.9] mb-12 relative z-20"
+            className="text-6xl md:text-8xl font-light tracking-tighter max-w-5xl leading-[0.9] mb-10 relative z-20"
           >
             The world’s first <br />
             <span className="text-gray-500 italic">comprehensive ecosystem</span> for
@@ -617,7 +626,7 @@ const DesignerStartupLanding = () => {
 
           <Motion.p
             style={{ color: missionSubtextColor }}
-            className="text-lg md:text-xl max-w-3xl font-light leading-relaxed mb-16 relative z-20"
+            className="text-lg md:text-xl max-w-3xl font-light leading-relaxed mb-12 relative z-20"
           >
             Startup Park bridges the gap between ambitious ideas and market-ready
             solutions. From ideation to IPO, we are your trusted partner in building
@@ -664,7 +673,7 @@ const DesignerStartupLanding = () => {
         {/* PHASE 4: GOOGLE MAP STYLE INFRASTRUCTURE SECTION */}
         <Motion.div
           style={{ opacity: mapSectionOpacity, y: mapSectionY }}
-          className="absolute inset-0 z-[40] bg-[#08111f] px-6 md:px-20 py-16 overflow-hidden"
+          className="relative z-[40] min-h-screen bg-[#08111f] px-6 md:px-20 py-16 overflow-hidden"
         >
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-[-20%] left-[-10%] w-[35vw] h-[35vw] rounded-full bg-blue-700/20 blur-[120px]" />
@@ -673,8 +682,8 @@ const DesignerStartupLanding = () => {
 
           <div className="relative z-10 h-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
             <Motion.div
-              style={{ opacity: mapHeaderOpacity }}
-              className="lg:col-span-4 h-full flex flex-col justify-between"
+              style={{ opacity: mapHeaderOpacity, y: mapHeaderY, scale: mapHeaderScale }}
+              className="lg:col-span-4 h-full flex flex-col justify-between gap-6"
             >
               <div>
                 <span className="text-blue-400 font-bold text-[10px] uppercase tracking-[0.5em] mb-5 block">
@@ -736,12 +745,24 @@ const DesignerStartupLanding = () => {
               </div>
             </Motion.div>
 
-            <div className="lg:col-span-8 h-[68vh] lg:h-[78vh]">
+            <Motion.div
+              style={{ y: mapSurfaceY, scale: mapSurfaceScale, opacity: mapSurfaceGlow }}
+              className="lg:col-span-8 h-[68vh] lg:h-[78vh]"
+            >
               <Motion.div
                 style={{ x: mapPanX, y: mapPanY }}
                 className="map-surface relative h-full w-full rounded-[36px] overflow-hidden border border-white/6 shadow-[0_40px_120px_-35px_rgba(0,0,0,0.6)]"
               >
+                <Motion.div
+                  style={{ opacity: mapSurfaceGlow }}
+                  className="absolute inset-0 z-[5] pointer-events-none bg-[radial-gradient(circle_at_50%_35%,rgba(96,165,250,0.18),transparent_30%),radial-gradient(circle_at_78%_72%,rgba(34,211,238,0.12),transparent_28%),radial-gradient(circle_at_18%_82%,rgba(59,130,246,0.1),transparent_22%)]"
+                />
                 <div className="map-roads absolute inset-0" />
+                <div className="absolute inset-0 z-[6] pointer-events-none">
+                  <div className="absolute top-[18%] left-[16%] w-2 h-2 rounded-full bg-cyan-300/80 blur-[1px] pulse-soft" />
+                  <div className="absolute top-[52%] left-[58%] w-2 h-2 rounded-full bg-blue-300/70 blur-[1px] pulse-soft" />
+                  <div className="absolute top-[79%] left-[72%] w-2 h-2 rounded-full bg-sky-300/60 blur-[1px] pulse-soft" />
+                </div>
 
                 <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-20">
                   <div className="map-glass rounded-full px-4 py-3 flex items-center gap-3">
@@ -786,12 +807,37 @@ const DesignerStartupLanding = () => {
                   <Motion.path
                     d="M 18 18 C 28 20, 35 25, 42 28 S 60 20, 72 22 S 70 42, 58 48 S 38 54, 26 56 S 34 68, 46 66 S 62 68, 76 70 S 72 84, 60 84"
                     fill="transparent"
+                    stroke="rgba(96,165,250,0.24)"
+                    strokeWidth="4.8"
+                    strokeLinecap="round"
+                    style={{ pathLength: routeProgress }}
+                  />
+
+                  <Motion.path
+                    d="M 18 18 C 28 20, 35 25, 42 28 S 60 20, 72 22 S 70 42, 58 48 S 38 54, 26 56 S 34 68, 46 66 S 62 68, 76 70 S 72 84, 60 84"
+                    fill="transparent"
                     stroke="url(#routeGradient)"
                     strokeWidth="1.6"
                     strokeLinecap="round"
                     style={{ pathLength: routeProgress }}
                   />
                 </svg>
+
+                <Motion.div
+                  style={{
+                    x: routeOrbX,
+                    y: routeOrbY,
+                    scale: routeOrbScale,
+                    opacity: routeOrbGlow,
+                  }}
+                  className="absolute z-20 pointer-events-none left-0 top-0"
+                >
+                  <div className="relative -translate-x-1/2 -translate-y-1/2">
+                    <div className="absolute inset-0 w-10 h-10 rounded-full bg-cyan-400/25 blur-xl" />
+                    <div className="absolute inset-[-8px] rounded-full border border-cyan-300/20" />
+                    <div className="w-4 h-4 rounded-full bg-white shadow-[0_0_0_8px_rgba(56,189,248,0.18),0_0_28px_rgba(34,211,238,0.55)]" />
+                  </div>
+                </Motion.div>
 
                 {mapStops.map((stop, idx) => (
                   <Motion.div
@@ -825,20 +871,8 @@ const DesignerStartupLanding = () => {
                   ))}
                 </div>
 
-                <div className="absolute left-6 bottom-6 z-20 map-glass rounded-[24px] px-5 py-4 max-w-sm">
-                  <p className="text-[10px] uppercase tracking-[0.28em] text-blue-400 mb-2">
-                    Scroll Navigation
-                  </p>
-                  <p className="text-white text-lg font-semibold tracking-tight mb-1">
-                    A physical + ecosystem-driven hub
-                  </p>
-                  <p className="text-slate-400 text-sm leading-relaxed">
-                    Not just space. Community, programs, launch support, services,
-                    events and founder movement stitched into one navigable experience.
-                  </p>
-                </div>
               </Motion.div>
-            </div>
+            </Motion.div>
           </div>
         </Motion.div>
 
@@ -856,122 +890,10 @@ const DesignerStartupLanding = () => {
               <span className="text-blue-600">We engineer the future</span> <br />
               of the Indian entrepreneur.&quot;
             </h2>
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-lg">
-                <img src={img9} className="w-full h-full object-cover" alt="Founder" />
-              </div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em]">
-                Vision Statement 2025
-              </span>
-            </div>
           </div>
         </Motion.div>
 
-        {/* NEW SECTION: HERO & IDENTITY + AUDIENCE & UTILITY */}
-        <Motion.div
-          style={{ opacity: audienceOpacity, y: audienceY }}
-          className="absolute inset-0 z-[48] bg-[#f5f5f2] px-6 md:px-20 py-16 overflow-hidden"
-        >
-          <Motion.div
-            style={{ y: audienceParallax }}
-            className="absolute -top-10 right-0 w-[40vw] h-[40vw] rounded-full bg-blue-100 blur-[120px] opacity-60"
-          />
-          <Motion.div
-            style={{ y: useSpring(useTransform(scrollYProgress, [0.79, 0.89], [-20, 30]), { stiffness: 90, damping: 18 }) }}
-            className="absolute bottom-[-10%] left-[-10%] w-[30vw] h-[30vw] rounded-full bg-cyan-100 blur-[120px] opacity-60"
-          />
-
-          <div className="relative z-10 h-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-5">
-              <span className="text-blue-600 font-bold text-[10px] uppercase tracking-[0.5em] mb-4 block">
-                Identity + Fit — 03
-              </span>
-              <h2 className="text-5xl md:text-7xl font-bold tracking-tighter leading-[0.95] mb-5">
-                Build. Launch. Grow. <br />
-                <span className="text-blue-600">All from Startup Park.</span>
-              </h2>
-              <p className="text-lg text-gray-600 max-w-xl leading-relaxed mb-8">
-                Startup Park is where startups take off. A physical campus fused with
-                an ecosystem designed for entrepreneurs, innovators and builders who
-                want more than just a desk.
-              </p>
-
-              <div className="flex flex-wrap gap-4 mb-10">
-                <button className="bg-black text-white px-6 py-3 rounded-full text-xs font-bold uppercase tracking-[0.25em] hover:scale-105 transition-transform">
-                  Book a Visit
-                </button>
-                <button className="bg-blue-600 text-white px-6 py-3 rounded-full text-xs font-bold uppercase tracking-[0.25em] hover:scale-105 transition-transform">
-                  Apply Now
-                </button>
-                <button className="bg-white text-black border border-black/10 px-6 py-3 rounded-full text-xs font-bold uppercase tracking-[0.25em] hover:scale-105 transition-transform">
-                  Launch Your Startup
-                </button>
-              </div>
-
-              <div className="rounded-[32px] bg-white/80 backdrop-blur-xl border border-black/5 p-7 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.15)]">
-                <p className="text-[10px] uppercase tracking-[0.35em] text-blue-600 font-bold mb-3">
-                  What is Startup Park
-                </p>
-                <p className="text-gray-700 leading-relaxed">
-                  More than a workspace, Startup Park is a founder ecosystem with
-                  community, events, launch support, execution services and
-                  infrastructure that helps people move from idea to momentum.
-                </p>
-              </div>
-            </div>
-
-            <div className="lg:col-span-7">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-                {audienceCards.map((card, idx) => (
-                  <Motion.div
-                    key={card.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.06, duration: 0.6 }}
-                    className={`rounded-[30px] p-6 border border-black/5 shadow-sm ${
-                      idx === 0
-                        ? "md:col-span-2 bg-black text-white"
-                        : "bg-white/85 backdrop-blur-xl"
-                    }`}
-                  >
-                    <p
-                      className={`text-[10px] uppercase tracking-[0.28em] mb-3 font-bold ${
-                        idx === 0 ? "text-blue-400" : "text-gray-400"
-                      }`}
-                    >
-                      Audience
-                    </p>
-                    <h3 className="text-2xl font-bold tracking-tight mb-3">{card.title}</h3>
-                    <p
-                      className={`text-sm leading-relaxed ${
-                        idx === 0 ? "text-gray-300" : "text-gray-600"
-                      }`}
-                    >
-                      {card.text}
-                    </p>
-                  </Motion.div>
-                ))}
-              </div>
-
-              <div className="rounded-[32px] bg-white/85 backdrop-blur-xl border border-black/5 p-6">
-                <p className="text-[10px] uppercase tracking-[0.35em] text-blue-600 font-bold mb-4">
-                  Activity Highlights
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  {activityHighlights.map((item) => (
-                    <div
-                      key={item}
-                      className="px-4 py-3 rounded-full bg-[#f7f7f5] border border-black/5 text-sm font-medium"
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </Motion.div>
+        <AudienceUtilitySection scrollYProgress={scrollYProgress} />
 
         {/* NEW SECTION: OFFERINGS & DIFFERENTIATION */}
         <Motion.div
