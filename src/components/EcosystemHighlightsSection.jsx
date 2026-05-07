@@ -210,8 +210,12 @@ const EcosystemHighlightsSection = ({ scrollYProgress, isActive = true }) => {
   }, []);
 
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
-  const ecosystemOpacity = useTransform(scrollYProgress, [0.95, 0.97, 0.99, 0.995], [0, 1, 1, 0]);
-  const ecosystemY = useTransform(scrollYProgress, [0.95, 0.97], [100, 0]);
+  const ecosystemOpacity = useTransform(
+    smoothProgress,
+    [0.915, 0.925, 0.945, 0.955],
+    [0, 1, 1, 0]
+  );
+  const ecosystemY = useTransform(smoothProgress, [0.915, 0.925], [72, 0]);
   const rotate = useTransform(smoothProgress, [0.95, 1], [0, 360]);
 
   return (
