@@ -180,16 +180,13 @@ const DesignerStartupLanding = () => {
   const mapHeaderY = useTransform(scrollYProgress, [0.23, 0.25], [24, 0]);
   const mapHeaderScale = useTransform(scrollYProgress, [0.23, 0.25], [0.98, 1]);
 
-  const mapPanX = useTransform(scrollYProgress, [0.24, 0.31], ["0%", "-1.2%"]);
-  const mapPanY = useTransform(scrollYProgress, [0.24, 0.31], ["0%", "-0.9%"]);
+  const mapPanX = useTransform(scrollYProgress, [0.24, 0.36], ["0%", "0%"]);
+  const mapPanY = useTransform(scrollYProgress, [0.24, 0.36], ["0%", "0%"]);
   const mapSurfaceY = useTransform(scrollYProgress, [0.24, 0.29], [16, 0]);
   const mapSurfaceScale = useTransform(scrollYProgress, [0.24, 0.29], [0.99, 1]);
-  const mapSurfaceGlow = useTransform(scrollYProgress, [0.24, 0.3], [0.84, 1]);
+  const mapSurfaceGlow = useTransform(scrollYProgress, [0.24, 0.36], [0.84, 1]);
 
-  const routeProgress = useSpring(
-    useTransform(scrollYProgress, [0.24, 0.3], [0, 1]),
-    { stiffness: 85, damping: 22 }
-  );
+  const routeProgress = useTransform(scrollYProgress, [0.24, 0.36], [0, 1]);
 
   const routeOrbX = useTransform(
     scrollYProgress,
@@ -201,10 +198,10 @@ const DesignerStartupLanding = () => {
     [0.24, 0.255, 0.27, 0.285, 0.3, 0.315, 0.33, 0.345, 0.36],
     ["18%", "28%", "22%", "48%", "56%", "66%", "70%", "84%", "84%"]
   );
-  const routeOrbScale = useTransform(scrollYProgress, [0.24, 0.28, 0.34], [0.7, 1, 0.92]);
-  const routeOrbGlow = useTransform(scrollYProgress, [0.24, 0.28, 0.34], [0.6, 1, 0.88]);
+  const routeOrbScale = useTransform(scrollYProgress, [0.24, 0.28, 0.36], [0.7, 1, 0.92]);
+  const routeOrbGlow = useTransform(scrollYProgress, [0.24, 0.28, 0.36], [0.6, 1, 0.88]);
 
-  const stopsTrackY = useTransform(scrollYProgress, [0.24, 0.31], [0, -756]);
+  const stopsTrackY = useTransform(scrollYProgress, [0.24, 0.36], [0, -756]);
 
   const pin1Scale = useTransform(scrollYProgress, [0.24, 0.243, 0.247], [1, 1.15, 1]);
   const pin2Scale = useTransform(scrollYProgress, [0.247, 0.25, 0.254], [1, 1.15, 1]);
