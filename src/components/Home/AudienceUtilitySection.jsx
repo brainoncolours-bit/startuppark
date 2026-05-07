@@ -4,8 +4,10 @@ import { MousePointer2, Radio, ShieldCheck, Cpu, Zap } from "lucide-react";
 
 /**
  * REVEAL STRATEGY:
- * We use 'overflow-hidden' containers for text to create the "Slide-up Mask" effect.
- * Cards use a staggered reveal so the section feels cinematic without wobble.
+ * - Use raw scroll progress for section gating to avoid spring overshoot flashes
+ * - No whileInView re-trigger on the intro label
+ * - Cards reveal sequentially and stay stable
+ * - Exact text content preserved
  */
 
 const audienceData = [
@@ -43,18 +45,18 @@ const audienceData = [
 
 const featurePills = ["Spaces", "Programs", "Mentors", "Momentum"];
 
-function AudienceCard({ item, index, smooth }) {
+function AudienceCard({ item, index, scrollYProgress }) {
   const start = 0.54 + index * 0.03;
   const end = start + 0.05;
 
-  const itemOp = useTransform(smooth, [start, end], [0, 1]);
-  const itemX = useTransform(smooth, [start, end], [40, 0]);
-  const itemScale = useTransform(smooth, [start, end], [0.95, 1]);
-  const activeGlow = useTransform(smooth, [start, end], [
+  const itemOp = useTransform(scrollYProgress, [start, end], [0, 1]);
+  const itemX = useTransform(scrollYProgress, [start, end], [40, 0]);
+  const itemScale = useTransform(scrollYProgress, [start, end], [0.95, 1]);
+  const activeGlow = useTransform(scrollYProgress, [start, end], [
     "rgba(59,130,246,0)",
     "rgba(59,130,246,0.1)",
   ]);
-  const pulseOpacity = useTransform(smooth, [start, end], [0, 1]);
+  const pulseOpacity = useTransform(scrollYProgress, [start, end], [0, 1]);
 
   return (
     <Motion.div
@@ -96,15 +98,15 @@ function AudienceCard({ item, index, smooth }) {
 const AudienceUtilitySection = ({ scrollYProgress, isActive = true }) => {
   const smooth = useSpring(scrollYProgress, { stiffness: 40, damping: 20 });
 
-  const sectionOp = useTransform(smooth, [0.46, 0.5, 0.78, 0.81], [0, 1, 1, 0]);
-  const sectionScale = useTransform(smooth, [0.46, 0.49], [1, 1]);
+  const sectionOp = useTransform(scrollYProgress, [0.46, 0.5, 0.78, 0.81], [0, 1, 1, 0]);
+  const sectionScale = useTransform(scrollYProgress, [0.46, 0.49], [1, 1]);
 
   const ringRotate = useTransform(smooth, [0.47, 0.79], [0, 90]);
   const scanLineY = useTransform(smooth, [0.52, 0.77], ["-8%", "108%"]);
 
-  const buildY = useTransform(smooth, [0.47, 0.5], ["100%", "0%"]);
-  const launchY = useTransform(smooth, [0.48, 0.51], ["100%", "0%"]);
-  const growY = useTransform(smooth, [0.49, 0.52], ["100%", "0%"]);
+  const buildY = useTransform(scrollYProgress, [0.47, 0.5], ["100%", "0%"]);
+  const launchY = useTransform(scrollYProgress, [0.48, 0.51], ["100%", "0%"]);
+  const growY = useTransform(scrollYProgress, [0.49, 0.52], ["100%", "0%"]);
 
   return (
     <Motion.div
@@ -135,8 +137,10 @@ const AudienceUtilitySection = ({ scrollYProgress, isActive = true }) => {
         <div className="col-span-12 lg:col-span-5 space-y-5 lg:space-y-6 xl:space-y-8 pt-1 lg:pt-2">
           <div className="space-y-3 lg:space-y-4">
             <Motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              style={{
+                opacity: useTransform(scrollYProgress, [0.455, 0.485], [0, 1]),
+                x: useTransform(scrollYProgress, [0.455, 0.485], [-20, 0]),
+              }}
               className="flex items-center gap-3"
             >
               <div className="h-[1px] w-8 bg-blue-500" />
@@ -175,8 +179,8 @@ const AudienceUtilitySection = ({ scrollYProgress, isActive = true }) => {
 
           <Motion.div
             style={{
-              opacity: useTransform(smooth, [0.51, 0.54], [0, 1]),
-              y: useTransform(smooth, [0.51, 0.54], [14, 0]),
+              opacity: useTransform(scrollYProgress, [0.51, 0.54], [0, 1]),
+              y: useTransform(scrollYProgress, [0.51, 0.54], [14, 0]),
             }}
             className="space-y-5 lg:space-y-6 xl:space-y-7"
           >
@@ -215,14 +219,21 @@ const AudienceUtilitySection = ({ scrollYProgress, isActive = true }) => {
         <div className="col-span-12 lg:col-span-7 relative pt-1 lg:pt-0">
           <div className="absolute left-[-18px] top-0 bottom-0 w-[1px] bg-white/10 hidden lg:block">
             <Motion.div
-              style={{ height: useTransform(smooth, [0.52, 0.68], ["0%", "100%"]) }}
+              style={{
+                height: useTransform(scrollYProgress, [0.52, 0.68], ["0%", "100%"]),
+              }}
               className="w-full bg-blue-500 shadow-[0_0_15px_#3b82f6]"
             />
           </div>
 
           <div className="flex flex-col gap-3 lg:gap-3.5 xl:gap-4">
             {audienceData.map((item, i) => (
-              <AudienceCard key={item.label} item={item} index={i} smooth={smooth} />
+              <AudienceCard
+                key={item.label}
+                item={item}
+                index={i}
+                scrollYProgress={scrollYProgress}
+              />
             ))}
           </div>
 
@@ -237,7 +248,7 @@ const AudienceUtilitySection = ({ scrollYProgress, isActive = true }) => {
 
       <div className="absolute bottom-6 left-4 right-4 sm:left-6 sm:right-6 lg:left-8 lg:right-8 flex justify-between items-end border-t border-white/5 pt-4">
         <Motion.div
-          style={{ opacity: useTransform(smooth, [0.45, 0.48], [0, 1]) }}
+          style={{ opacity: useTransform(scrollYProgress, [0.45, 0.48], [0, 1]) }}
           className="max-w-xs space-y-2"
         >
           <span className="text-[9px] font-black text-blue-500 uppercase tracking-[0.5em]">

@@ -1,16 +1,16 @@
 import React, { useRef, useState } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
-import AudienceUtilitySection from "../components/AudienceUtilitySection";
-import EcosystemHighlightsSection from "../components/EcosystemHighlightsSection";
-import HomeBackgroundGridSection from "../components/HomeBackgroundGridSection";
-import HomeContactSection from "../components/HomeContactSection";
-import HomeCreedSection from "../components/HomeCreedSection";
-import HomeFinalRevealSection from "../components/HomeFinalRevealSection";
-import HomeHeroSection from "../components/HomeHeroSection";
-import HomeInfrastructureMapSection from "../components/HomeInfrastructureMapSection";
-import HomeMissionSection from "../components/HomeMissionSection";
-import HomeNavigationSection from "../components/HomeNavigationSection";
-import OfferingsDifferentiationSection from "../components/OfferingsDifferentiationSection";
+import AudienceUtilitySection from "../components/Home/AudienceUtilitySection";
+import EcosystemHighlightsSection from "../components/Home/EcosystemHighlightsSection";
+import HomeBackgroundGridSection from "../components/Home/HomeBackgroundGridSection";
+import HomeContactSection from "../components/Home/HomeContactSection";
+import HomeCreedSection from "../components/Home/HomeCreedSection";
+import HomeFinalRevealSection from "../components/Home/HomeFinalRevealSection";
+import HomeHeroSection from "../components/Home/HomeHeroSection";
+import HomeInfrastructureMapSection from "../components/Home/HomeInfrastructureMapSection";
+import HomeMissionSection from "../components/Home/HomeMissionSection";
+import HomeNavigationSection from "../components/Home/HomeNavigationSection";
+import OfferingsDifferentiationSection from "../components/Home/OfferingsDifferentiationSection";
 
 const DesignerStartupLanding = () => {
   const containerRef = useRef(null);
@@ -28,9 +28,9 @@ const DesignerStartupLanding = () => {
         ? "mission"
         : latest < 0.77
         ? "audience"
-        : latest < 0.92
+        : latest < 0.945
         ? "offerings"
-        : latest < 0.95
+        : latest < 0.975
         ? "ecosystem"
         : "contact";
 
@@ -222,6 +222,7 @@ const DesignerStartupLanding = () => {
         />
 
         <OfferingsDifferentiationSection
+          key={activePhase}
           scrollYProgress={scrollYProgress}
           isActive={offeringsActive}
         />
