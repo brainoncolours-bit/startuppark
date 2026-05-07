@@ -109,7 +109,7 @@ const DesignerStartupLanding = () => {
         ? "audience"
         : latest < 0.95
         ? "offerings"
-        : latest < 0.99
+        : latest < 0.92
         ? "ecosystem"
         : "contact";
 
@@ -237,10 +237,10 @@ const DesignerStartupLanding = () => {
   // Contact
   const contactOpacity = useTransform(
     scrollYProgress,
-    [0.92, 0.96, 0.99, 1],
+    [0.88, 0.92, 0.98, 1],
     [0, 1, 1, 1]
   );
-  const contactY = useTransform(scrollYProgress, [0.92, 0.96], [60, 0]);
+  const contactY = useTransform(scrollYProgress, [0.88, 0.92], [60, 0]);
 
   // Final reveal
   const footerOpacity = useTransform(scrollYProgress, [0.995, 1], [0, 1]);

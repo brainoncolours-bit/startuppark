@@ -177,21 +177,21 @@ function PremiumCard({ card, index, scrollYProgress, mobile = false }) {
   const featured = card.label === "03";
   const Icon = cardIcons[index % cardIcons.length];
 
-  const start = 0.79 + index * 0.025;
-  const end = start + 0.06;
+  const start = 0.77 + index * 0.02;
+  const end = start + 0.045;
 
   const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
   const xBase = useTransform(
     scrollYProgress,
     [start, end],
-    [featured ? 0 : -14, 0]
+    [featured ? 0 : index % 2 === 0 ? -140 : 140, 0]
   );
-  const yBase = useTransform(scrollYProgress, [start, end], [28, 0]);
-  const scaleBase = useTransform(scrollYProgress, [start, end], [0.965, 1]);
+  const yBase = useTransform(scrollYProgress, [start, end], [34, 0]);
+  const scaleBase = useTransform(scrollYProgress, [start, end], [0.94, 1]);
   const rotateBase = useTransform(
     scrollYProgress,
     [start, end],
-    [featured ? 0 : -2, 0]
+    [featured ? 0 : index % 2 === 0 ? -3 : 3, 0]
   );
 
   const springConfig = { stiffness: 60, damping: 20, mass: 0.8 };
@@ -348,28 +348,28 @@ const OfferingsDifferentiationSection = ({
 }) => {
   const sectionOpacity = useTransform(
     scrollYProgress,
-    [0.77, 0.8, 0.94, 0.96],
+    [0.74, 0.77, 0.9, 0.92],
     [0, 1, 1, 0]
   );
-  const sectionY = useTransform(scrollYProgress, [0.77, 0.8], [34, 0]);
+  const sectionY = useTransform(scrollYProgress, [0.74, 0.77], [34, 0]);
 
   const leftBlockY = useSpring(
-    useTransform(scrollYProgress, [0.79, 0.85], [18, 0]),
+    useTransform(scrollYProgress, [0.76, 0.82], [18, 0]),
     { stiffness: 50, damping: 20 }
   );
   const leftBlockOpacity = useTransform(
     scrollYProgress,
-    [0.79, 0.85],
+    [0.76, 0.82],
     [0, 1]
   );
 
-  const titleReveal1 = useTransform(scrollYProgress, [0.78, 0.82], ["100%", "0%"]);
-  const titleReveal2 = useTransform(scrollYProgress, [0.79, 0.83], ["100%", "0%"]);
-  const titleReveal3 = useTransform(scrollYProgress, [0.8, 0.84], ["100%", "0%"]);
+  const titleReveal1 = useTransform(scrollYProgress, [0.75, 0.79], ["100%", "0%"]);
+  const titleReveal2 = useTransform(scrollYProgress, [0.765, 0.805], ["100%", "0%"]);
+  const titleReveal3 = useTransform(scrollYProgress, [0.78, 0.82], ["100%", "0%"]);
 
   const pathProgress = useTransform(
     scrollYProgress,
-    [0.8, 0.87, 0.95, 1],
+    [0.79, 0.85, 0.9, 0.95],
     [0, 0.8, 1, 1]
   );
 
@@ -432,8 +432,8 @@ const OfferingsDifferentiationSection = ({
 
           <Motion.p
             style={{
-              opacity: useTransform(scrollYProgress, [0.51, 0.55], [0, 1]),
-              y: useTransform(scrollYProgress, [0.51, 0.55], [14, 0]),
+              opacity: useTransform(scrollYProgress, [0.48, 0.52], [0, 1]),
+              y: useTransform(scrollYProgress, [0.48, 0.52], [14, 0]),
             }}
             className="mb-7 sm:mb-8 mt-4 sm:mt-5 max-w-md text-sm sm:text-lg leading-relaxed text-slate-300 font-light"
           >
