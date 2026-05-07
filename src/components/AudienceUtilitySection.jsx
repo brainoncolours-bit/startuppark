@@ -1,264 +1,266 @@
 import React from "react";
 import { motion as Motion, useSpring, useTransform } from "framer-motion";
-import { Rocket, Target, Zap, Users, Globe, ArrowRight, MousePointer2, Sparkles, MoveRight } from "lucide-react";
+import { MousePointer2, Radio, ShieldCheck, Cpu, Zap } from "lucide-react";
 
-const audienceCards = [
+/**
+ * REVEAL STRATEGY:
+ * We use 'overflow-hidden' containers for text to create the "Slide-up Mask" effect.
+ * Cards use a staggered reveal so the section feels cinematic without wobble.
+ */
+
+const audienceData = [
   {
+    label: "01",
     title: "Startups",
-    icon: <Rocket className="w-6 h-6" />,
-    text: "Set up, validate, hire, build traction, and grow inside a founder-first environment.",
-    color: "#3b82f6"
+    icon: <Zap size={14} />,
+    sub: "Set up, validate, hire, build traction, and grow inside a founder-first environment.",
   },
   {
+    label: "02",
     title: "Entrepreneurs",
-    icon: <Target className="w-6 h-6" />,
-    text: "Turn ideas into companies with support, community, execution and visibility.",
-    color: "#60a5fa"
+    icon: <ShieldCheck size={14} />,
+    sub: "Turn ideas into companies with support, community, execution and visibility.",
   },
   {
+    label: "03",
     title: "Founders",
-    icon: <Zap className="w-6 h-6" />,
-    text: "Find a serious operating base with access to events, mentors, peers and momentum.",
-    color: "#93c5fd"
+    icon: <Cpu size={14} />,
+    sub: "Find a serious operating base with access to events, mentors, peers and momentum.",
   },
   {
+    label: "04",
     title: "Creators",
-    icon: <Users className="w-6 h-6" />,
-    text: "Collaborate with brands, startups and ecosystem builders through energy-rich spaces.",
-    color: "#2563eb"
+    icon: <Radio size={14} />,
+    sub: "Collaborate with brands, startups and ecosystem builders through energy-rich spaces.",
   },
   {
+    label: "05",
     title: "Ecosystem Builders",
-    icon: <Globe className="w-6 h-6" />,
-    text: "Run programs, activate communities and plug into Bangalore's startup pulse.",
-    color: "#1d4ed8"
+    icon: <ShieldCheck size={14} />,
+    sub: "Run programs, activate communities and plug into Bangalore's startup pulse.",
   },
 ];
 
-const AudienceUtilitySection = ({ scrollYProgress }) => {
-  // High-precision smooth spring
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 60, damping: 25 });
+const featurePills = ["Spaces", "Programs", "Mentors", "Momentum"];
 
-  // 1. SECTION LIFECYCLE
-  const sectionOpacity = useTransform(smoothProgress, [0.43, 0.46, 0.64, 0.68], [0, 1, 1, 0]);
-  const sectionScale = useTransform(smoothProgress, [0.43, 0.46, 0.64, 0.68], [0.9, 1, 1, 0.95]);
+function AudienceCard({ item, index, smooth }) {
+  const start = 0.54 + index * 0.03;
+  const end = start + 0.05;
 
-  // 2. LINE-BY-LINE TEXT REVEAL LOGIC
-  const title1Y = useTransform(smoothProgress, [0.44, 0.46], [50, 0]);
-  const title1Op = useTransform(smoothProgress, [0.44, 0.46], [0, 1]);
-  
-  const title2Y = useTransform(smoothProgress, [0.45, 0.47], [50, 0]);
-  const title2Op = useTransform(smoothProgress, [0.45, 0.47], [0, 1]);
-
-  const title3Y = useTransform(smoothProgress, [0.46, 0.48], [50, 0]);
-  const title3Op = useTransform(smoothProgress, [0.46, 0.48], [0, 1]);
-
-  // Paragraph Reveal
-  const introLine1Op = useTransform(smoothProgress, [0.48, 0.50], [0, 1]);
-  const introLine2Op = useTransform(smoothProgress, [0.49, 0.51], [0, 1]);
-
-  // 3. BACKGROUND ANIMATIONS
-  const bgRotation = useTransform(smoothProgress, [0.45, 0.65], [0, 30]);
-  const blueGlowScale = useTransform(smoothProgress, [0.45, 0.55], [0.8, 1.2]);
+  const itemOp = useTransform(smooth, [start, end], [0, 1]);
+  const itemX = useTransform(smooth, [start, end], [40, 0]);
+  const itemScale = useTransform(smooth, [start, end], [0.95, 1]);
+  const activeGlow = useTransform(smooth, [start, end], [
+    "rgba(59,130,246,0)",
+    "rgba(59,130,246,0.1)",
+  ]);
+  const pulseOpacity = useTransform(smooth, [start, end], [0, 1]);
 
   return (
     <Motion.div
-      style={{ 
-        opacity: sectionOpacity, 
-        scale: sectionScale,
-        perspective: "1500px" 
-      }}
-      className="absolute inset-0 z-[48] bg-[#050505] overflow-hidden flex flex-col items-center justify-center py-20"
+      style={{ opacity: itemOp, x: itemX, scale: itemScale, backgroundColor: activeGlow }}
+      className="group relative flex items-start gap-8 p-8 rounded-2xl border border-white/5 backdrop-blur-xl transition-all"
     >
-      {/* --- STYLISH BACKGROUND ELEMENTS --- */}
-      <Motion.div 
-        style={{ rotate: bgRotation }}
-        className="absolute inset-0 opacity-30 pointer-events-none"
-      >
-        <div className="absolute inset-0" style={{ 
-          backgroundImage: `linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px' 
-        }} />
-      </Motion.div>
+      <div className="flex-shrink-0 relative">
+        <div className="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white/20 group-hover:text-blue-500 group-hover:border-blue-500 transition-all duration-500">
+          <span className="text-lg font-black italic">{item.label}</span>
+        </div>
+        <Motion.div
+          style={{ opacity: pulseOpacity }}
+          className="absolute -inset-1 border border-blue-500/30 rounded-full animate-ping"
+        />
+      </div>
 
-      <Motion.div 
-        style={{ scale: blueGlowScale }}
-        className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-blue-600/10 blur-[150px] rounded-full" 
+      <div className="flex-1 pt-1">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-2xl font-bold text-white uppercase tracking-tight group-hover:text-blue-400 transition-colors">
+            {item.title}
+          </h3>
+          <div className="text-blue-500/30 group-hover:text-blue-500 transition-colors">
+            {item.icon}
+          </div>
+        </div>
+        <p className="text-sm text-white/40 leading-relaxed group-hover:text-white/80 transition-colors max-w-prose">
+          {item.sub}
+        </p>
+      </div>
+    </Motion.div>
+  );
+}
+
+const AudienceUtilitySection = ({ scrollYProgress, isActive = true }) => {
+  const smooth = useSpring(scrollYProgress, { stiffness: 40, damping: 20 });
+
+  // Section transition window is held longer so the full content can settle
+  // before the next phase becomes active.
+  const sectionOp = useTransform(smooth, [0.46, 0.5, 0.78, 0.81], [0, 1, 1, 0]);
+  const sectionScale = useTransform(smooth, [0.46, 0.49], [1.05, 1]);
+
+  // Background kinetic elements
+  const ringRotate = useTransform(smooth, [0.47, 0.79], [0, 120]);
+  const scanLineY = useTransform(smooth, [0.52, 0.77], ["-10%", "110%"]);
+
+  // Header animation ranges
+  const buildY = useTransform(smooth, [0.47, 0.5], ["100%", "0%"]);
+  const launchY = useTransform(smooth, [0.48, 0.51], ["100%", "0%"]);
+  const growY = useTransform(smooth, [0.49, 0.52], ["100%", "0%"]);
+
+  return (
+    <Motion.div
+      style={{ opacity: sectionOp, scale: sectionScale }}
+      className={`absolute inset-0 z-[48] bg-[#050505] overflow-hidden flex items-center justify-center font-sans pt-16 sm:pt-20 lg:pt-0 ${
+        isActive ? "visible lg:visible" : "visible lg:invisible"
+      }`}
+    >
+      <div
+        className="absolute inset-0 opacity-10"
+        style={{
+          backgroundImage: `radial-gradient(#3b82f6 1px, transparent 1px)`,
+          backgroundSize: "40px 40px",
+        }}
       />
 
-      <div className="relative z-50 w-full max-w-[1480px] px-6 md:px-12 text-center">
-        {/* --- SECTION 1: STAGGERED HERO TEXT --- */}
-        <div className="mx-auto max-w-6xl mb-10 md:mb-12">
-        <Motion.span 
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-blue-400 font-black text-[10px] md:text-[12px] uppercase tracking-[0.85em] block mb-5"
-        >
-          IDENTITY + FIT — PHASE 03
-        </Motion.span>
-
-        <Motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-4 flex flex-wrap items-center justify-center gap-3"
-        >
-          {['Founder-first campus', 'Launch support', 'Community + events'].map((pill, i) => (
-            <span
-              key={pill}
-              className={`px-4 py-2 rounded-full border text-[10px] md:text-[11px] font-black uppercase tracking-[0.28em] backdrop-blur-md ${
-                i === 0
-                  ? 'bg-blue-500/10 border-blue-400/20 text-blue-300'
-                  : i === 1
-                    ? 'bg-indigo-500/10 border-indigo-400/20 text-indigo-200'
-                    : 'bg-white/5 border-white/10 text-white/70'
-              }`}
-            >
-              {pill}
-            </span>
-          ))}
-        </Motion.div>
-
-        <div className="flex flex-col items-center gap-1.5 mb-3 md:mb-4">
-            <Motion.h2 style={{ y: title1Y, opacity: title1Op }} className="text-[clamp(3.5rem,8vw,6.8rem)] font-black text-white tracking-tighter leading-[0.82] italic uppercase">
-                Build. Launch.
-            </Motion.h2>
-            <Motion.h2 style={{ y: title2Y, opacity: title2Op }} className="text-[clamp(3.5rem,8vw,6.8rem)] font-black tracking-tighter leading-[0.82] italic uppercase text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-500 drop-shadow-[0_0_30px_rgba(59,130,246,0.25)]">
-                Grow.
-            </Motion.h2>
-            <Motion.p 
-              style={{ opacity: title3Op, y: title3Y }} 
-              className="text-base md:text-xl font-bold text-white mt-2 tracking-tight"
-            >
-              All from <span className="text-blue-300">Startup Park</span>.
-            </Motion.p>
-        </div>
-
-        {/* STAGGERED PARAGRAPH REVEAL */}
-        <div className="flex flex-col items-center space-y-3 md:space-y-4">
-            <Motion.p style={{ opacity: introLine1Op }} className="text-lg md:text-xl text-white font-medium max-w-2xl">
-                Startup Park is where startups take off.
-            </Motion.p>
-            <Motion.p style={{ opacity: introLine2Op }} className="text-lg md:text-xl text-white/50 leading-relaxed font-medium max-w-3xl">
-                A physical campus fused with an ecosystem designed for entrepreneurs, innovators and builders who want <span className="text-blue-400 italic">more than just a desk.</span>
-            </Motion.p>
-            <Motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.5 }}e
-              className="flex flex-wrap items-center justify-center gap-2 md:gap-3 pt-1"
-            >
-              {['Spaces', 'Programs', 'Mentors', 'Momentum'].map((item, i) => (
-                <span
-                  key={item}
-                  className={`px-3.5 py-2 rounded-full text-[10px] md:text-[11px] font-black uppercase tracking-[0.25em] border ${
-                    i === 0
-                      ? 'bg-white/6 text-white border-white/10'
-                      : i === 1
-                        ? 'bg-blue-500/10 text-blue-200 border-blue-400/20'
-                        : i === 2
-                          ? 'bg-cyan-500/10 text-cyan-100 border-cyan-400/20'
-                          : 'bg-indigo-500/10 text-indigo-100 border-indigo-400/20'
-                  }`}
-                >
-                  {item}
-                </span>
-              ))}
-            </Motion.div>
-        </div>
-      </div>
-      </div>
-
-      {/* --- SECTION 2: SEQUENTIAL CARD REVEAL --- */}
-      <div className="relative z-40 grid w-full grid-cols-1 gap-4 md:grid-cols-5 mb-14 md:mb-16">
-          {audienceCards.map((card, idx) => {
-            // Each card has its own reveal trigger based on scroll
-            const startScroll = 0.51 + (idx * 0.02);
-            const endScroll = 0.55 + (idx * 0.02);
-            
-            const cardY = useTransform(smoothProgress, [startScroll, endScroll], [60, 0]);
-            const cardOp = useTransform(smoothProgress, [startScroll, endScroll], [0, 1]);
-            const cardScale = useTransform(smoothProgress, [startScroll, endScroll], [0.9, 1]);
-
-            return (
-              <Motion.div
-                key={card.title}
-                style={{ y: cardY, opacity: cardOp, scale: cardScale }}
-                whileHover={{ 
-                  y: -15, 
-                  scale: 1.05,
-                  backgroundColor: "rgba(59,130,246,0.1)",
-                  borderColor: "rgba(59,130,246,0.5)"
-                }}
-                className="group relative h-auto rounded-[3rem] bg-white/5 border border-white/10 p-6 md:p-7 flex flex-col justify-between overflow-hidden backdrop-blur-2xl transition-all duration-500 shadow-2xl"
-              >
-                {/* Glow Effect on Hover */}
-                <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-600/20 blur-[60px] group-hover:opacity-100 opacity-0 transition-opacity" />
-
-                <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-8 text-white transition-transform group-hover:scale-110 group-hover:rotate-12"
-                       style={{ background: `linear-gradient(135deg, ${card.color}44, transparent)`, border: `1px solid ${card.color}66` }}>
-                    {card.icon}
-                  </div>
-                  <p className="text-[10px] font-bold text-blue-400/50 uppercase tracking-[0.4em] mb-3">Target</p>
-                  <h3 className="text-2xl font-black text-white uppercase italic tracking-tighter leading-none">{card.title}</h3>
-                </div>
-
-                <div className="relative z-10">
-                  <p className="text-sm text-white/50 leading-relaxed group-hover:text-white/90 transition-colors">
-                    {card.text}
-                  </p>
-                  <div className="mt-8 flex items-center gap-3 text-white font-black text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0">
-                    JOIN THE PULSE <ArrowRight size={16} className="text-blue-500" />
-                  </div>
-                </div>
-              </Motion.div>
-            );
-          })}
-      </div>
-
-      {/* --- SECTION 3: THE FOOTER / WHAT IS SECTION --- */}
-      <Motion.div 
-        style={{ 
-          opacity: useTransform(smoothProgress, [0.68, 0.72], [0, 1]),
-          y: useTransform(smoothProgress, [0.68, 0.72], [32, 0])
-        }}
-        className="w-full max-w-7xl grid grid-cols-1 gap-10 items-center px-6 lg:grid-cols-12"
+      <Motion.div
+        style={{ rotate: ringRotate }}
+        className="absolute w-[1000px] h-[1000px] opacity-20 pointer-events-none"
       >
-        <div className="lg:col-span-6">
-           <div className="relative p-8 md:p-10 rounded-[3.5rem] bg-gradient-to-br from-white/10 to-transparent border border-white/10 backdrop-blur-3xl group overflow-hidden">
-              <div className="absolute top-0 left-0 w-2 h-full bg-blue-600 shadow-[0_0_20px_rgba(37,99,235,0.8)]" />
-              <h4 className="text-[11px] font-black text-blue-400 uppercase tracking-[0.5em] mb-6">WHAT IS STARTUP PARK</h4>
-              <p className="text-white/80 leading-relaxed text-lg font-medium italic">
-                "More than a workspace, <span className="text-white font-black">Startup Park is a founder ecosystem</span> with community, events, launch support, execution services and infrastructure that helps people move from idea to momentum."
-              </p>
-           </div>
-        </div>
-
-        <div className="lg:col-span-6 flex flex-col md:flex-row gap-4 justify-center lg:justify-end">
-            <button className="group relative px-10 py-5 rounded-2xl bg-white text-black text-[11px] font-black uppercase tracking-[0.2em] overflow-hidden transition-all hover:scale-105 active:scale-95">
-                <span className="relative z-10 flex items-center gap-3">Book a Visit <MousePointer2 size={16}/></span>
-                <div className="absolute inset-0 bg-blue-600 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-            </button>
-            
-            <div className="flex flex-col gap-3">
-                <button className="px-10 py-5 rounded-2xl border-2 border-white/20 text-white text-[11px] font-black uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all">
-                    Apply Now
-                </button>
-                <button className="flex items-center justify-center gap-3 px-10 py-5 rounded-2xl bg-blue-600 text-white text-[11px] font-black uppercase tracking-[0.2em] hover:shadow-[0_0_40px_rgba(37,99,235,0.5)] transition-all">
-                    Launch Startup <MoveRight size={16} />
-                </button>
-            </div>
-        </div>
+        <div className="absolute inset-0 border-[1px] border-blue-500/20 rounded-full" />
+        <div className="absolute inset-10 border-[1px] border-blue-500/10 border-dashed rounded-full" />
+        <div className="absolute inset-[20%] border-[2px] border-blue-600/5 rounded-full" />
       </Motion.div>
 
-      {/* Blueprint Visual Indicator */}
-      <div className="absolute bottom-10 left-10 hidden md:block">
-          <div className="flex items-center gap-4">
-              <div className="w-12 h-[1px] bg-blue-500/50" />
-              <span className="text-[9px] font-bold text-blue-500/50 uppercase tracking-[1em]">SYSTEM_READY</span>
+      <div className="relative z-30 w-full max-w-[1440px] px-6 sm:px-10 lg:px-16 grid grid-cols-12 gap-10 lg:gap-20 items-center">
+        <div className="col-span-12 lg:col-span-5 space-y-10">
+          <div className="space-y-4">
+            <Motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              className="flex items-center gap-3"
+            >
+              <div className="h-[1px] w-8 bg-blue-500" />
+              <span className="text-[#3b82f6] text-[10px] font-black tracking-[0.5em] uppercase">
+                Identity + Fit // Phase 03
+              </span>
+            </Motion.div>
+
+            <div className="space-y-1">
+              <div className="overflow-hidden h-[90px]">
+                <Motion.h2
+                  style={{ y: buildY }}
+                  className="text-8xl font-black text-white italic uppercase leading-none tracking-tighter"
+                >
+                  Build.
+                </Motion.h2>
+              </div>
+              <div className="overflow-hidden h-[90px]">
+                <Motion.h2
+                  style={{ y: launchY }}
+                  className="text-8xl font-black text-white italic uppercase leading-none tracking-tighter"
+                >
+                  Launch.
+                </Motion.h2>
+              </div>
+              <div className="overflow-hidden h-[100px]">
+                <Motion.h2
+                  style={{ y: growY }}
+                  className="text-8xl font-black italic uppercase leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-blue-600"
+                >
+                  Grow.
+                </Motion.h2>
+              </div>
+            </div>
           </div>
+
+          <Motion.div
+            style={{
+              opacity: useTransform(smooth, [0.51, 0.54], [0, 1]),
+              y: useTransform(smooth, [0.51, 0.54], [20, 0]),
+            }}
+            className="space-y-8"
+          >
+            <p className="text-xl text-white/70 font-medium leading-relaxed max-w-md">
+              Startup Park is where startups take off.{" "}
+              <span className="text-white/30 italic">
+                A physical campus fused with an ecosystem designed for innovators who want more than just a desk.
+              </span>
+            </p>
+
+            <div className="flex flex-wrap gap-3">
+              {featurePills.map((pill) => (
+                <div key={pill} className="group relative">
+                  <span className="relative z-10 px-4 py-2 text-[10px] font-bold text-blue-400 uppercase tracking-widest border border-blue-500/20 bg-blue-500/5 rounded-sm overflow-hidden block transition-colors group-hover:text-white">
+                    {pill}
+                  </span>
+                  <div className="absolute inset-0 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-6 pt-4">
+              <button className="group relative px-10 py-5 bg-white rounded-full transition-transform active:scale-95">
+                <span className="relative z-10 text-black text-[11px] font-black uppercase tracking-widest flex items-center gap-3 group-hover:text-white transition-colors">
+                  Book a Visit <MousePointer2 size={16} />
+                </span>
+                <div className="absolute inset-0 bg-blue-600 rounded-full scale-0 group-hover:scale-100 transition-transform duration-500" />
+              </button>
+              <button className="text-white text-[11px] font-black uppercase tracking-[0.3em] hover:text-blue-400 transition-colors border-b border-white/10 pb-1">
+                Apply Now
+              </button>
+            </div>
+          </Motion.div>
+        </div>
+
+        <div className="col-span-12 lg:col-span-7 relative">
+          <div className="absolute left-[-40px] top-0 bottom-0 w-[1px] bg-white/10">
+            <Motion.div
+              style={{ height: useTransform(smooth, [0.52, 0.68], ["0%", "100%"]) }}
+              className="w-full bg-blue-500 shadow-[0_0_15px_#3b82f6]"
+            />
+          </div>
+
+          <div className="flex flex-col gap-4">
+            {audienceData.map((item, i) => (
+              <AudienceCard key={item.label} item={item} index={i} smooth={smooth} />
+            ))}
+          </div>
+
+          <Motion.div
+            style={{ top: scanLineY }}
+            className="absolute left-[-60px] right-[-20px] h-[1px] bg-gradient-to-r from-transparent via-blue-500 to-transparent z-50 pointer-events-none"
+          >
+            <div className="absolute right-0 w-2 h-2 bg-blue-500 rounded-full blur-[2px]" />
+          </Motion.div>
+        </div>
       </div>
+
+      <div className="absolute bottom-12 left-16 right-16 flex justify-between items-end border-t border-white/5 pt-8">
+        <Motion.div
+          style={{ opacity: useTransform(smooth, [0.45, 0.48], [0, 1]) }}
+          className="max-w-xs space-y-2"
+        >
+          <span className="text-[9px] font-black text-blue-500 uppercase tracking-[0.5em]">
+            Global Access Points
+          </span>
+          <p className="text-[11px] text-white/30 italic leading-snug">
+            "Startup Park is a founder ecosystem helping builders move from idea to market momentum via execution support."
+          </p>
+        </Motion.div>
+
+        <div className="flex flex-col items-end gap-1 text-[9px] font-black text-white/20 tracking-[0.5em] uppercase">
+          <div className="flex items-center gap-3">
+            <span className="text-green-500 animate-pulse">●</span>
+            <span>Link_Status: Active</span>
+          </div>
+          <span>Bengaluru_Campus // 12.9716° N</span>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,800;1,800&display=swap');
+        :global(body) {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+      `}</style>
     </Motion.div>
   );
 };

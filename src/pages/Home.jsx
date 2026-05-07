@@ -4,8 +4,11 @@ import {
   useScroll,
   useTransform,
   useSpring,
+  useMotionValueEvent,
 } from "framer-motion";
 import AudienceUtilitySection from "../components/AudienceUtilitySection";
+import EcosystemHighlightsSection from "../components/EcosystemHighlightsSection";
+import OfferingsDifferentiationSection from "../components/OfferingsDifferentiationSection";
 
 // Assets
 const img1 =
@@ -86,66 +89,17 @@ const mapStops = [
   },
 ];
 
-const programCards = [
-  {
-    label: "01",
-    title: "Entrepreneur Membership",
-    text: "A flexible base for solo operators, early founders and builders entering the ecosystem.",
-  },
-  {
-    label: "02",
-    title: "Startup Membership",
-    text: "An operating layer for teams that need space, energy, access and startup-grade infrastructure.",
-  },
-  {
-    label: "03",
-    title: "Launch Pad",
-    text: "A founder-facing stage to introduce startups, gain visibility and enter the ecosystem with clarity.",
-  },
-  {
-    label: "04",
-    title: "Day One Services",
-    text: "Registration, branding, positioning, website creation and go-to-market launch support.",
-  },
-  {
-    label: "05",
-    title: "Infrastructure",
-    text: "Workspaces, labs, meeting rooms, event halls and support systems built for startup execution.",
-  },
-];
-
-const differentiators = [
-  "Founder-first community, not just desks",
-  "Active event culture and live ecosystem energy",
-  "Bengaluru startup network advantage",
-  "Execution support from idea to launch",
-  "Programs, infrastructure and visibility in one place",
-];
-
-const testimonials = [
-  {
-    name: "Founder Story — Reserved",
-    quote:
-      "Startup Park gave us more than space. It gave us movement, access and the right people at the right time.",
-  },
-  {
-    name: "Startup Story — Reserved",
-    quote:
-      "From setup to visibility, the ecosystem reduced friction and helped us focus on building.",
-  },
-  {
-    name: "Builder Story — Reserved",
-    quote:
-      "The energy here feels operational, not performative. You can actually build, launch and grow.",
-  },
-];
-
 const DesignerStartupLanding = () => {
   const containerRef = useRef(null);
   const [isVideoReady, setIsVideoReady] = useState(false);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
+  });
+  const [scrollPhase, setScrollPhase] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    setScrollPhase(latest);
   });
 
   // Navigation
@@ -200,42 +154,27 @@ const DesignerStartupLanding = () => {
   // PHASE 4: Google-map style section
   const mapSectionOpacity = useTransform(
     scrollYProgress,
-    [0.22, 0.26, 0.39, 0.43],
+    [0.22, 0.25, 0.33, 0.36],
     [0, 1, 1, 0]
   );
-  const mapSectionY = useTransform(scrollYProgress, [0.22, 0.26], [50, 0]);
+  const mapSectionY = useTransform(scrollYProgress, [0.22, 0.25], [50, 0]);
   const mapHeaderOpacity = useTransform(
     scrollYProgress,
-    [0.23, 0.26, 0.38, 0.42],
+    [0.23, 0.25, 0.31, 0.34],
     [0, 1, 1, 0]
   );
-  const mapHeaderY = useTransform(scrollYProgress, [0.23, 0.26], [24, 0]);
-  const mapHeaderScale = useTransform(scrollYProgress, [0.23, 0.26], [0.98, 1]);
+  const mapHeaderY = useTransform(scrollYProgress, [0.23, 0.25], [24, 0]);
+  const mapHeaderScale = useTransform(scrollYProgress, [0.23, 0.25], [0.98, 1]);
 
-  const mapPanX = useSpring(
-    useTransform(
-      scrollYProgress,
-      [0.24, 0.255, 0.27, 0.285, 0.3, 0.315, 0.33, 0.345, 0.36],
-      ["0%", "-0.8%", "0.5%", "-1%", "0.8%", "-0.6%", "0.9%", "-0.4%", "0%"]
-    ),
-    { stiffness: 42, damping: 36 }
-  );
-
-  const mapPanY = useSpring(
-    useTransform(
-      scrollYProgress,
-      [0.24, 0.255, 0.27, 0.285, 0.3, 0.315, 0.33, 0.345, 0.36],
-      ["0%", "-0.7%", "0.4%", "-0.9%", "0.7%", "-0.5%", "0.8%", "-0.3%", "0%"]
-    ),
-    { stiffness: 42, damping: 36 }
-  );
-  const mapSurfaceY = useTransform(scrollYProgress, [0.24, 0.28], [16, 0]);
-  const mapSurfaceScale = useTransform(scrollYProgress, [0.24, 0.28], [0.99, 1]);
-  const mapSurfaceGlow = useTransform(scrollYProgress, [0.24, 0.32], [0.84, 1]);
+  const mapPanX = useTransform(scrollYProgress, [0.24, 0.31], ["0%", "-1.2%"]);
+  const mapPanY = useTransform(scrollYProgress, [0.24, 0.31], ["0%", "-0.9%"]);
+  const mapSurfaceY = useTransform(scrollYProgress, [0.24, 0.29], [16, 0]);
+  const mapSurfaceScale = useTransform(scrollYProgress, [0.24, 0.29], [0.99, 1]);
+  const mapSurfaceGlow = useTransform(scrollYProgress, [0.24, 0.3], [0.84, 1]);
 
   const routeProgress = useSpring(
-    useTransform(scrollYProgress, [0.24, 0.34], [0, 1]),
-    { stiffness: 100, damping: 18 }
+    useTransform(scrollYProgress, [0.24, 0.3], [0, 1]),
+    { stiffness: 85, damping: 22 }
   );
 
   const routeOrbX = useTransform(
@@ -251,62 +190,50 @@ const DesignerStartupLanding = () => {
   const routeOrbScale = useTransform(scrollYProgress, [0.24, 0.28, 0.34], [0.7, 1, 0.92]);
   const routeOrbGlow = useTransform(scrollYProgress, [0.24, 0.28, 0.34], [0.6, 1, 0.88]);
 
-  const stopsTrackY = useSpring(
-    useTransform(scrollYProgress, [0.24, 0.34], [0, -756]),
-    { stiffness: 90, damping: 18 }
-  );
+  const stopsTrackY = useTransform(scrollYProgress, [0.24, 0.31], [0, -756]);
 
-  const pin1Scale = useTransform(scrollYProgress, [0.24, 0.25, 0.26], [1, 1.28, 1]);
-  const pin2Scale = useTransform(scrollYProgress, [0.255, 0.265, 0.275], [1, 1.28, 1]);
-  const pin3Scale = useTransform(scrollYProgress, [0.27, 0.28, 0.29], [1, 1.28, 1]);
-  const pin4Scale = useTransform(scrollYProgress, [0.285, 0.295, 0.305], [1, 1.28, 1]);
-  const pin5Scale = useTransform(scrollYProgress, [0.3, 0.31, 0.32], [1, 1.28, 1]);
-  const pin6Scale = useTransform(scrollYProgress, [0.315, 0.325, 0.335], [1, 1.28, 1]);
-  const pin7Scale = useTransform(scrollYProgress, [0.33, 0.34, 0.35], [1, 1.28, 1]);
-  const pin8Scale = useTransform(scrollYProgress, [0.345, 0.355, 0.365], [1, 1.28, 1]);
+  const pin1Scale = useTransform(scrollYProgress, [0.24, 0.243, 0.247], [1, 1.15, 1]);
+  const pin2Scale = useTransform(scrollYProgress, [0.247, 0.25, 0.254], [1, 1.15, 1]);
+  const pin3Scale = useTransform(scrollYProgress, [0.254, 0.257, 0.261], [1, 1.15, 1]);
+  const pin4Scale = useTransform(scrollYProgress, [0.261, 0.264, 0.268], [1, 1.15, 1]);
+  const pin5Scale = useTransform(scrollYProgress, [0.268, 0.271, 0.275], [1, 1.15, 1]);
+  const pin6Scale = useTransform(scrollYProgress, [0.275, 0.278, 0.282], [1, 1.15, 1]);
+  const pin7Scale = useTransform(scrollYProgress, [0.282, 0.285, 0.289], [1, 1.15, 1]);
+  const pin8Scale = useTransform(scrollYProgress, [0.289, 0.292, 0.296], [1, 1.15, 1]);
 
-  const pin1Opacity = useTransform(scrollYProgress, [0.24, 0.25, 0.26], [0.7, 1, 0.7]);
-  const pin2Opacity = useTransform(scrollYProgress, [0.255, 0.265, 0.275], [0.7, 1, 0.7]);
-  const pin3Opacity = useTransform(scrollYProgress, [0.27, 0.28, 0.29], [0.7, 1, 0.7]);
-  const pin4Opacity = useTransform(scrollYProgress, [0.285, 0.295, 0.305], [0.7, 1, 0.7]);
-  const pin5Opacity = useTransform(scrollYProgress, [0.3, 0.31, 0.32], [0.7, 1, 0.7]);
-  const pin6Opacity = useTransform(scrollYProgress, [0.315, 0.325, 0.335], [0.7, 1, 0.7]);
-  const pin7Opacity = useTransform(scrollYProgress, [0.33, 0.34, 0.35], [0.7, 1, 0.7]);
-  const pin8Opacity = useTransform(scrollYProgress, [0.345, 0.355, 0.365], [0.7, 1, 0.7]);
+  const pin1Opacity = useTransform(scrollYProgress, [0.24, 0.243, 0.247], [0.7, 1, 0.7]);
+  const pin2Opacity = useTransform(scrollYProgress, [0.247, 0.25, 0.254], [0.7, 1, 0.7]);
+  const pin3Opacity = useTransform(scrollYProgress, [0.254, 0.257, 0.261], [0.7, 1, 0.7]);
+  const pin4Opacity = useTransform(scrollYProgress, [0.261, 0.264, 0.268], [0.7, 1, 0.7]);
+  const pin5Opacity = useTransform(scrollYProgress, [0.268, 0.271, 0.275], [0.7, 1, 0.7]);
+  const pin6Opacity = useTransform(scrollYProgress, [0.275, 0.278, 0.282], [0.7, 1, 0.7]);
+  const pin7Opacity = useTransform(scrollYProgress, [0.282, 0.285, 0.289], [0.7, 1, 0.7]);
+  const pin8Opacity = useTransform(scrollYProgress, [0.289, 0.292, 0.296], [0.7, 1, 0.7]);
 
   // Creed
   const creedOpacity = useTransform(
     scrollYProgress,
-    [0.43, 0.47, 0.55, 0.59],
+    [0.37, 0.4, 0.44, 0.48],
     [0, 1, 1, 0]
   );
-  const creedScale = useTransform(scrollYProgress, [0.43, 0.47], [0.95, 1]);
+  const creedScale = useTransform(scrollYProgress, [0.37, 0.4], [0.95, 1]);
 
-  const offeringsOpacity = useTransform(
-    scrollYProgress,
-    [0.74, 0.78, 0.9, 0.94],
-    [0, 1, 1, 0]
-  );
-  const offeringsY = useTransform(scrollYProgress, [0.74, 0.78], [50, 0]);
-
-  const ecosystemOpacity = useTransform(
-    scrollYProgress,
-    [0.88, 0.92, 1, 1],
-    [0, 1, 1, 0]
-  );
-  const ecosystemY = useTransform(scrollYProgress, [0.88, 0.92], [40, 0]);
+  const audienceActive = scrollPhase >= 0.46 && scrollPhase < 0.77;
+  const offeringsActive = scrollPhase >= 0.77 && scrollPhase < 0.95;
+  const ecosystemActive = scrollPhase >= 0.95 && scrollPhase < 0.99;
+  const contactActive = scrollPhase >= 0.99;
 
   // Contact
   const contactOpacity = useTransform(
     scrollYProgress,
-    [0.84, 0.87, 0.94, 0.98],
+    [0.99, 0.995, 1, 1],
     [0, 1, 1, 0]
   );
-  const contactY = useTransform(scrollYProgress, [0.84, 0.88], [40, 0]);
+  const contactY = useTransform(scrollYProgress, [0.99, 0.995], [40, 0]);
 
   // Final reveal
-  const footerOpacity = useTransform(scrollYProgress, [0.94, 0.99], [0, 1]);
-  const footerScale = useTransform(scrollYProgress, [0.94, 1], [1.05, 1]);
+  const footerOpacity = useTransform(scrollYProgress, [0.995, 1], [0, 1]);
+  const footerScale = useTransform(scrollYProgress, [0.995, 1], [1.05, 1]);
 
   const pinScales = [
     pin1Scale,
@@ -543,7 +470,7 @@ const DesignerStartupLanding = () => {
             <div className="flex items-center justify-center gap-4">
               <div className="h-[1px] w-12 bg-blue-500" />
               <span className="text-blue-500 font-mono text-xs uppercase tracking-[0.4em]">
-                Innovate → Accelerate → Succeed
+                Innovate ? Accelerate ? Succeed
               </span>
               <div className="h-[1px] w-12 bg-blue-500" />
             </div>
@@ -650,7 +577,7 @@ const DesignerStartupLanding = () => {
                 style={{ color: missionStatColor }}
                 className="text-3xl md:text-4xl font-bold block"
               >
-                ₹600 Cr+
+                ?600 Cr+
               </Motion.span>
               <span className="text-[10px] uppercase tracking-widest text-gray-500">
                 Funding Accessed
@@ -702,7 +629,7 @@ const DesignerStartupLanding = () => {
               <div className="map-glass rounded-[28px] p-4 md:p-5 mt-8 overflow-hidden">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white text-sm">
-                    ⌕
+                    ?
                   </div>
                   <div>
                     <p className="text-white text-sm font-semibold">Startup Park Maps</p>
@@ -732,7 +659,7 @@ const DesignerStartupLanding = () => {
                             </p>
                           </div>
                           <div className="w-9 h-9 rounded-full bg-blue-500/10 border border-blue-400/20 flex items-center justify-center text-blue-300">
-                            ↗
+                            ?
                           </div>
                         </div>
                         <p className="text-slate-400 text-sm leading-relaxed mt-3">
@@ -766,7 +693,7 @@ const DesignerStartupLanding = () => {
 
                 <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-20">
                   <div className="map-glass rounded-full px-4 py-3 flex items-center gap-3">
-                    <span className="text-white/70 text-sm">⌕</span>
+                    <span className="text-white/70 text-sm">?</span>
                     <span className="text-white/90 text-sm">Startup Park, Bengaluru</span>
                   </div>
                   <div className="map-glass rounded-full px-4 py-3 text-[11px] uppercase tracking-[0.28em] text-slate-300">
@@ -779,7 +706,7 @@ const DesignerStartupLanding = () => {
                     +
                   </div>
                   <div className="map-glass rounded-2xl w-12 h-12 flex items-center justify-center text-white text-lg">
-                    −
+                    -
                   </div>
                 </div>
 
@@ -893,187 +820,17 @@ const DesignerStartupLanding = () => {
           </div>
         </Motion.div>
 
-        <AudienceUtilitySection scrollYProgress={scrollYProgress} />
+        <AudienceUtilitySection scrollYProgress={scrollYProgress} isActive={audienceActive} />
 
-        {/* NEW SECTION: OFFERINGS & DIFFERENTIATION */}
-        <Motion.div
-          style={{ opacity: offeringsOpacity, y: offeringsY }}
-          className="absolute inset-0 z-[49] bg-[#0b0b0c] text-white px-6 md:px-20 py-16 overflow-hidden"
-        >
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-[-10%] left-[10%] w-[30vw] h-[30vw] bg-blue-700/15 rounded-full blur-[110px]" />
-            <div className="absolute bottom-[-10%] right-[5%] w-[28vw] h-[28vw] bg-indigo-700/15 rounded-full blur-[110px]" />
-          </div>
+        <OfferingsDifferentiationSection scrollYProgress={scrollYProgress} isActive={offeringsActive} />
 
-          <div className="relative z-10 h-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-5">
-              <span className="text-blue-400 font-bold text-[10px] uppercase tracking-[0.5em] mb-4 block">
-                Offerings — 04
-              </span>
-              <h2 className="text-5xl md:text-7xl font-bold tracking-tighter leading-[0.95] mb-5">
-                Programs. Services. <br />
-                <span className="text-blue-500">Infrastructure.</span>
-              </h2>
-              <p className="text-slate-400 max-w-lg text-base leading-relaxed mb-8">
-                Startup Park combines memberships, launch support, services and
-                physical infrastructure so founders can operate from one powerful base.
-              </p>
-
-              <div className="rounded-[30px] border border-white/8 bg-white/[0.03] p-6">
-                <p className="text-[10px] uppercase tracking-[0.32em] text-blue-400 font-bold mb-4">
-                  Why Startup Park is Different
-                </p>
-                <div className="space-y-3">
-                  {differentiators.map((item) => (
-                    <div key={item} className="flex items-start gap-3">
-                      <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 shrink-0" />
-                      <p className="text-slate-300 text-sm leading-relaxed">{item}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {programCards.map((card) => (
-                <div
-                  key={card.label}
-                  className={`rounded-[28px] border border-white/6 p-6 ${
-                    card.label === "03"
-                      ? "bg-blue-600 text-white xl:col-span-2"
-                      : "bg-white/[0.04]"
-                  }`}
-                >
-                  <p
-                    className={`text-[10px] uppercase tracking-[0.3em] font-bold mb-4 ${
-                      card.label === "03" ? "text-blue-100" : "text-white/35"
-                    }`}
-                  >
-                    {card.label}
-                  </p>
-                  <h3 className="text-2xl font-bold tracking-tight mb-3">{card.title}</h3>
-                  <p
-                    className={`text-sm leading-relaxed ${
-                      card.label === "03" ? "text-blue-50/90" : "text-slate-400"
-                    }`}
-                  >
-                    {card.text}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Motion.div>
-
-        {/* NEW SECTION: STRATEGIC ECOSYSTEM HIGHLIGHTS + SOCIAL PROOF + FINAL ACTION */}
-        <Motion.div
-          style={{ opacity: ecosystemOpacity, y: ecosystemY }}
-          className="absolute inset-0 z-[50] bg-white px-6 md:px-20 py-14 overflow-hidden"
-        >
-          <div className="relative z-10 h-full flex flex-col justify-center">
-            <div className="mb-8">
-              <span className="text-blue-600 font-bold text-[10px] uppercase tracking-[0.5em] mb-4 block">
-                Ecosystem Highlights — 05
-              </span>
-              <h2 className="text-4xl md:text-7xl font-bold tracking-tighter leading-[0.95]">
-                A live ecosystem for
-                <br />
-                <span className="text-blue-600">founders in motion.</span>
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-              <div className="lg:col-span-5 rounded-[34px] bg-black text-white p-8">
-                <p className="text-[10px] uppercase tracking-[0.32em] text-blue-400 font-bold mb-4">
-                  Launch Pad
-                </p>
-                <h3 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-                  A stage for founders to introduce their startup to the ecosystem.
-                </h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Present your startup, gain visibility, meet the right people, and
-                  begin your Startup Park journey with clarity and momentum.
-                </p>
-              </div>
-
-              <div className="lg:col-span-4 rounded-[34px] bg-[#f7f7f5] border border-black/5 p-8">
-                <p className="text-[10px] uppercase tracking-[0.32em] text-blue-600 font-bold mb-4">
-                  Day One Services
-                </p>
-                <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">
-                  Registration. Branding. Website. Launch.
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  A revenue-generating service layer for founders who need help
-                  getting company basics and launch assets done right.
-                </p>
-              </div>
-
-              <div className="lg:col-span-3 rounded-[34px] bg-blue-600 text-white p-8">
-                <p className="text-[10px] uppercase tracking-[0.32em] text-blue-100 font-bold mb-4">
-                  Events & Community
-                </p>
-                <div className="space-y-3 text-sm leading-relaxed">
-                  <div>Founder Meetups</div>
-                  <div>Live Workshops</div>
-                  <div>Pitch Rooms</div>
-                  <div>Community Nights</div>
-                  <div>Demo Days</div>
-                </div>
-              </div>
-
-              <div className="lg:col-span-7 rounded-[34px] border border-black/5 p-7 bg-white">
-                <p className="text-[10px] uppercase tracking-[0.32em] text-blue-600 font-bold mb-5">
-                  Testimonials
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {testimonials.map((item) => (
-                    <div
-                      key={item.name}
-                      className="rounded-[24px] bg-[#f7f7f5] border border-black/5 p-5"
-                    >
-                      <p className="text-sm text-gray-700 leading-relaxed mb-4">
-                        {item.quote}
-                      </p>
-                      <p className="text-[10px] uppercase tracking-[0.25em] text-gray-400 font-bold">
-                        {item.name}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="lg:col-span-5 rounded-[34px] bg-black text-white p-8 flex flex-col justify-between">
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.32em] text-blue-400 font-bold mb-4">
-                    Final Action
-                  </p>
-                  <h3 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-                    Join Startup Park. <br />
-                    Or build with Day One.
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed mb-8">
-                    Enter the ecosystem as a founder, builder, team or partner and
-                    move from intention to execution faster.
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-4">
-                  <button className="bg-white text-black px-6 py-3 rounded-full text-xs font-bold uppercase tracking-[0.25em]">
-                    Join Startup Park
-                  </button>
-                  <button className="bg-blue-600 text-white px-6 py-3 rounded-full text-xs font-bold uppercase tracking-[0.25em]">
-                    Build with Day One
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Motion.div>
+        <EcosystemHighlightsSection scrollYProgress={scrollYProgress} isActive={ecosystemActive} />
 
         {/* PHASE 5: THE CONNECTION HUB */}
         <Motion.div
           style={{ opacity: contactOpacity, y: contactY }}
-          className="absolute inset-0 z-[55] flex flex-col justify-center px-10 md:px-32 bg-white"
+          className={`absolute inset-0 z-[55] flex flex-col justify-center px-10 md:px-32 bg-white ${contactActive ? "visible" : "invisible"}`}
+          aria-hidden={!contactActive}
         >
           <div className="absolute top-[15%] right-[20%] floating-pill opacity-40 rotate-12">
             HQ: Bengaluru
@@ -1182,3 +939,4 @@ const DesignerStartupLanding = () => {
 };
 
 export default DesignerStartupLanding;
+
