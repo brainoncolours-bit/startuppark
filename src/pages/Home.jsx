@@ -107,9 +107,9 @@ const DesignerStartupLanding = () => {
         ? "mission"
         : latest < 0.77
         ? "audience"
-        : latest < 0.95
+        : latest < 0.93
         ? "offerings"
-        : latest < 0.92
+        : latest < 0.97
         ? "ecosystem"
         : "contact";
 
@@ -237,14 +237,18 @@ const DesignerStartupLanding = () => {
   // Contact
   const contactOpacity = useTransform(
     scrollYProgress,
-    [0.88, 0.92, 0.98, 1],
-    [0, 1, 1, 1]
+    [0.968, 0.978, 0.992, 0.996],
+    [0, 1, 1, 0]
   );
-  const contactY = useTransform(scrollYProgress, [0.88, 0.92], [60, 0]);
+  const contactY = useTransform(scrollYProgress, [0.968, 0.978], [60, 0]);
 
   // Final reveal
-  const footerOpacity = useTransform(scrollYProgress, [0.995, 1], [0, 1]);
-  const footerScale = useTransform(scrollYProgress, [0.995, 1], [1.05, 1]);
+  const footerOpacity = useTransform(
+    scrollYProgress,
+    [0.996, 1],
+    [0, 1]
+  );
+  const footerScale = useTransform(scrollYProgress, [0.996, 1], [1.05, 1]);
 
   const pinScales = [
     pin1Scale,
@@ -957,4 +961,3 @@ const DesignerStartupLanding = () => {
 };
 
 export default DesignerStartupLanding;
-
