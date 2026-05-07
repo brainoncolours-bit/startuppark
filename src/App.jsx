@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from '@studio-freight/lenis';
 import Navbar from './components/Navbar';
@@ -17,7 +17,6 @@ import CreatePost from './pages/admin/CreatePost';
 import EditPost from './pages/admin/EditPost';
 
 function AppContent() {
-  const [showNavbar, setShowNavbar] = useState(true); // Default to true so it shows at start
   const location = useLocation();
   const lenisRef = useRef(null);
 
@@ -53,14 +52,7 @@ function AppContent() {
     };
   }, [isAdminPage]);
 
-  // Reset navbar visibility when route changes
   useEffect(() => {
-    if (location.pathname !== '/') {
-      setShowNavbar(true);
-    } else {
-      setShowNavbar(true); // Show initially on home
-    }
-    
     if (lenisRef.current) {
       lenisRef.current.scrollTo(0, { immediate: true });
     }
@@ -69,11 +61,15 @@ function AppContent() {
   const isHome = location.pathname === '/';
 
   return (
-    <div className="flex flex-col min-h-screen w-full">
-      {!isAdminPage && <Navbar show={showNavbar} />}
-      <main className={`flex-1 w-full ${isHome || isAdminPage ? '' : 'bg-gray-50'}`}>
+      <div className="flex flex-col min-h-screen w-full">
+      {!isAdminPage && <Navbar />}
+      <main
+        className={`flex-1 w-full ${
+          isHome ? "bg-[#050816]" : isAdminPage ? "" : "bg-gray-50"
+        }`}
+      >
         <Routes>
-          <Route path="/" element={<Home onNavbarShow={setShowNavbar} />} />
+          <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />

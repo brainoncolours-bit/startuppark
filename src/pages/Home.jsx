@@ -6,6 +6,7 @@ import {
   useSpring,
   useMotionValueEvent,
 } from "framer-motion";
+import { MapPin, Route, Layers3 } from "lucide-react";
 import AudienceUtilitySection from "../components/AudienceUtilitySection";
 import EcosystemHighlightsSection from "../components/EcosystemHighlightsSection";
 import OfferingsDifferentiationSection from "../components/OfferingsDifferentiationSection";
@@ -96,10 +97,23 @@ const DesignerStartupLanding = () => {
     target: containerRef,
     offset: ["start start", "end end"],
   });
-  const [scrollPhase, setScrollPhase] = useState(0);
+  const [activePhase, setActivePhase] = useState("hero");
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    setScrollPhase(latest);
+    const nextPhase =
+      latest < 0.22
+        ? "hero"
+        : latest < 0.46
+        ? "mission"
+        : latest < 0.77
+        ? "audience"
+        : latest < 0.95
+        ? "offerings"
+        : latest < 0.99
+        ? "ecosystem"
+        : "contact";
+
+    setActivePhase((prev) => (prev === nextPhase ? prev : nextPhase));
   });
 
   // Navigation
@@ -218,18 +232,18 @@ const DesignerStartupLanding = () => {
   );
   const creedScale = useTransform(scrollYProgress, [0.37, 0.4], [0.95, 1]);
 
-  const audienceActive = scrollPhase >= 0.46 && scrollPhase < 0.77;
-  const offeringsActive = scrollPhase >= 0.77 && scrollPhase < 0.95;
-  const ecosystemActive = scrollPhase >= 0.95 && scrollPhase < 0.99;
-  const contactActive = scrollPhase >= 0.99;
+  const audienceActive = activePhase === "audience";
+  const offeringsActive = activePhase === "offerings";
+  const ecosystemActive = activePhase === "ecosystem";
+  const contactActive = activePhase === "contact";
 
   // Contact
   const contactOpacity = useTransform(
     scrollYProgress,
-    [0.99, 0.995, 1, 1],
-    [0, 1, 1, 0]
+    [0.92, 0.96, 0.99, 1],
+    [0, 1, 1, 1]
   );
-  const contactY = useTransform(scrollYProgress, [0.99, 0.995], [40, 0]);
+  const contactY = useTransform(scrollYProgress, [0.92, 0.96], [60, 0]);
 
   // Final reveal
   const footerOpacity = useTransform(scrollYProgress, [0.995, 1], [0, 1]);
@@ -258,7 +272,10 @@ const DesignerStartupLanding = () => {
   ];
 
   return (
-    <div ref={containerRef} className="relative h-[1800vh] bg-transparent text-[#121212]">
+    <div
+      ref={containerRef}
+      className="relative h-[1800vh] bg-[#050816] text-white overflow-x-clip"
+    >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
 
@@ -433,7 +450,7 @@ const DesignerStartupLanding = () => {
         </button>
       </Motion.nav>
 
-      <div className="sticky top-0 h-screen w-full overflow-visible">
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#050816]">
         {/* PHASE 1: THE HERO CORE */}
         <Motion.div
           style={{
@@ -467,10 +484,10 @@ const DesignerStartupLanding = () => {
               <br />
               FOR FOUNDERS.
             </h1>
-            <div className="flex items-center justify-center gap-4">
+              <div className="flex items-center justify-center gap-4">
               <div className="h-[1px] w-12 bg-blue-500" />
               <span className="text-blue-500 font-mono text-xs uppercase tracking-[0.4em]">
-                Innovate ? Accelerate ? Succeed
+                Innovate • Accelerate • Succeed
               </span>
               <div className="h-[1px] w-12 bg-blue-500" />
             </div>
@@ -577,7 +594,7 @@ const DesignerStartupLanding = () => {
                 style={{ color: missionStatColor }}
                 className="text-3xl md:text-4xl font-bold block"
               >
-                ?600 Cr+
+                ₹600 Cr+
               </Motion.span>
               <span className="text-[10px] uppercase tracking-widest text-gray-500">
                 Funding Accessed
@@ -629,7 +646,7 @@ const DesignerStartupLanding = () => {
               <div className="map-glass rounded-[28px] p-4 md:p-5 mt-8 overflow-hidden">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white text-sm">
-                    ?
+                    <Route size={16} />
                   </div>
                   <div>
                     <p className="text-white text-sm font-semibold">Startup Park Maps</p>
@@ -659,7 +676,7 @@ const DesignerStartupLanding = () => {
                             </p>
                           </div>
                           <div className="w-9 h-9 rounded-full bg-blue-500/10 border border-blue-400/20 flex items-center justify-center text-blue-300">
-                            ?
+                            <Layers3 size={14} />
                           </div>
                         </div>
                         <p className="text-slate-400 text-sm leading-relaxed mt-3">
@@ -693,7 +710,9 @@ const DesignerStartupLanding = () => {
 
                 <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-20">
                   <div className="map-glass rounded-full px-4 py-3 flex items-center gap-3">
-                    <span className="text-white/70 text-sm">?</span>
+                    <span className="text-white/70 text-sm">
+                      <MapPin size={14} />
+                    </span>
                     <span className="text-white/90 text-sm">Startup Park, Bengaluru</span>
                   </div>
                   <div className="map-glass rounded-full px-4 py-3 text-[11px] uppercase tracking-[0.28em] text-slate-300">
@@ -829,7 +848,9 @@ const DesignerStartupLanding = () => {
         {/* PHASE 5: THE CONNECTION HUB */}
         <Motion.div
           style={{ opacity: contactOpacity, y: contactY }}
-          className={`absolute inset-0 z-[55] flex flex-col justify-center px-10 md:px-32 bg-white ${contactActive ? "visible" : "invisible"}`}
+          className={`absolute inset-0 z-[55] flex flex-col justify-center px-10 md:px-32 bg-white ${
+            contactActive ? "pointer-events-auto visible" : "pointer-events-none invisible"
+          }`}
           aria-hidden={!contactActive}
         >
           <div className="absolute top-[15%] right-[20%] floating-pill opacity-40 rotate-12">
