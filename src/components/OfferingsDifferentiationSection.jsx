@@ -1,15 +1,14 @@
 ﻿import React from "react";
 import { motion as Motion, useSpring, useTransform } from "framer-motion";
-import { MousePointer2, Radio, ShieldCheck, Cpu, Zap } from "lucide-react";
+import { MousePointer2, Radio, ShieldCheck, Cpu, Zap, Sparkles } from "lucide-react";
 
 /**
- * Visual refresh only:
+ * Visual redesign only:
  * - same text content
  * - tighter containment inside the viewport
- * - background extends under the navbar area
- * - slightly smaller card shells so the bottom row stays visible
- * - subtle hover sheen and reveal glows
- * - no layout expansion beyond the current section frame
+ * - no layout spill into adjacent sections
+ * - richer ambient layers and softer reveal motion
+ * - more organic, premium composition
  */
 
 const programCards = [
@@ -55,54 +54,120 @@ const leftSignals = [
 ];
 
 const cardSlots = {
-  "01": { top: "7%", left: "2%", width: "min(20vw, 260px)", zIndex: 1 },
-  "02": { top: "7%", right: "2%", width: "min(20vw, 260px)", zIndex: 1 },
+  "01": { top: "8%", left: "4%", width: "min(19vw, 250px)", zIndex: 1 },
+  "02": { top: "8%", right: "4%", width: "min(19vw, 250px)", zIndex: 1 },
   "03": {
     top: "38%",
     left: "50%",
-    width: "min(24vw, 330px)",
+    width: "min(25vw, 340px)",
     transform: "translateX(-50%)",
     zIndex: 5,
   },
-  "04": { bottom: "14%", left: "4%", width: "min(20vw, 260px)", zIndex: 1 },
-  "05": { bottom: "14%", right: "4%", width: "min(20vw, 260px)", zIndex: 1 },
+  "04": { bottom: "10%", left: "8%", width: "min(19vw, 250px)", zIndex: 1 },
+  "05": { bottom: "10%", right: "8%", width: "min(19vw, 250px)", zIndex: 1 },
 };
 
-function Gyroscope({ scrollYProgress }) {
-  const rotateX = useTransform(scrollYProgress, [0.56, 0.82], [0, 14]);
-  const rotateY = useTransform(scrollYProgress, [0.56, 0.82], [0, -20]);
-  const rotateZ = useTransform(scrollYProgress, [0.56, 0.82], [0, 16]);
+const cardIcons = [Zap, ShieldCheck, Sparkles, Radio, Cpu];
 
-  const pulseX = useSpring(
-    useTransform(scrollYProgress, [0.56, 0.82], [-40, 40]),
-    { stiffness: 80, damping: 18, mass: 0.85 }
+function AmbientField({ scrollYProgress }) {
+  const orbitRotate = useTransform(scrollYProgress, [0.56, 0.82], [0, 18]);
+  const orbitRotate2 = useTransform(scrollYProgress, [0.56, 0.82], [0, -14]);
+
+  const driftX = useSpring(
+    useTransform(scrollYProgress, [0.56, 0.82], [-40, 46]),
+    { stiffness: 80, damping: 18, mass: 0.9 }
   );
-  const pulseY = useSpring(
-    useTransform(scrollYProgress, [0.56, 0.82], [24, -18]),
-    { stiffness: 80, damping: 18, mass: 0.85 }
+  const driftY = useSpring(
+    useTransform(scrollYProgress, [0.56, 0.82], [22, -18]),
+    { stiffness: 80, damping: 18, mass: 0.9 }
   );
-  const pulseScale = useSpring(
-    useTransform(scrollYProgress, [0.56, 0.7, 0.82], [0.95, 1.02, 1]),
-    { stiffness: 80, damping: 18, mass: 0.85 }
+  const driftScale = useSpring(
+    useTransform(scrollYProgress, [0.56, 0.72, 0.82], [0.94, 1.03, 1]),
+    { stiffness: 80, damping: 18, mass: 0.9 }
   );
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden opacity-25">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
       <Motion.div
-        style={{ rotateX, rotateY, rotateZ }}
-        className="absolute w-[72vw] h-[72vw] max-h-[1000px] max-w-[1000px] rounded-full border-[1px] border-dashed border-cyan-400/16"
+        aria-hidden="true"
+        className="absolute -top-24 left-[-8%] h-[32vw] w-[32vw] max-h-[480px] max-w-[480px] rounded-full bg-blue-800/20 blur-[140px]"
+        animate={{ scale: [1, 1.08, 1] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
       <Motion.div
-        style={{ rotateX: rotateY, rotateY: rotateZ, rotateZ: rotateX }}
-        className="absolute w-[56vw] h-[56vw] max-h-[820px] max-w-[820px] rounded-full border border-blue-500/16"
+        aria-hidden="true"
+        className="absolute bottom-[-16%] right-[-6%] h-[32vw] w-[32vw] max-h-[480px] max-w-[480px] rounded-full bg-cyan-700/12 blur-[150px]"
+        animate={{ scale: [1, 1.06, 1] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      <Motion.div
+        style={{ rotate: orbitRotate }}
+        className="absolute left-1/2 top-1/2 h-[70vw] w-[70vw] max-h-[980px] max-w-[980px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-cyan-400/14 opacity-30"
       />
       <Motion.div
-        style={{ x: pulseX, y: pulseY, scale: pulseScale }}
-        className="absolute h-[30vw] w-[30vw] max-h-[460px] max-w-[460px] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.16),transparent_62%)] blur-2xl"
+        style={{ rotate: orbitRotate2 }}
+        className="absolute left-1/2 top-1/2 h-[54vw] w-[54vw] max-h-[800px] max-w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue-500/12 opacity-30"
+      />
+
+      <Motion.div
+        style={{ x: driftX, y: driftY, scale: driftScale }}
+        className="absolute left-1/2 top-1/2 h-[28vw] w-[28vw] max-h-[430px] max-w-[430px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.18),transparent_64%)] blur-2xl"
       />
       <Motion.div
-        style={{ x: pulseX, y: pulseY, scale: pulseScale }}
-        className="absolute h-4 w-4 rounded-full bg-cyan-400 shadow-[0_0_28px_rgba(34,211,238,0.95)]"
+        style={{ x: driftX, y: driftY, scale: driftScale }}
+        className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400 shadow-[0_0_28px_rgba(34,211,238,0.95)]"
+      />
+
+      <Motion.div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
+          backgroundSize: "72px 72px",
+          opacity: 0.2,
+        }}
+      />
+
+      <Motion.div
+        aria-hidden="true"
+        className="absolute left-0 top-[18%] h-px w-48 bg-gradient-to-r from-transparent via-blue-500/35 to-transparent blur-2xl"
+        style={{
+          x: useSpring(
+            useTransform(scrollYProgress, [0.56, 0.82], [-28, 130]),
+            { stiffness: 85, damping: 18, mass: 0.8 }
+          ),
+        }}
+      />
+      <Motion.div
+        aria-hidden="true"
+        className="absolute left-0 top-[70%] h-px w-56 bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent blur-2xl"
+        style={{
+          x: useSpring(
+            useTransform(scrollYProgress, [0.58, 0.82], [40, 220]),
+            { stiffness: 85, damping: 18, mass: 0.8 }
+          ),
+        }}
+      />
+
+      <Motion.div
+        aria-hidden="true"
+        className="absolute left-[14%] top-[22%] h-2 w-2 rounded-full bg-blue-400 shadow-[0_0_18px_rgba(59,130,246,0.85)]"
+        animate={{ y: [0, -8, 0], x: [0, 10, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <Motion.div
+        aria-hidden="true"
+        className="absolute right-[16%] top-[30%] h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_14px_rgba(34,211,238,0.75)]"
+        animate={{ y: [0, 12, 0], x: [0, -10, 0] }}
+        transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <Motion.div
+        aria-hidden="true"
+        className="absolute right-[8%] bottom-[18%] h-2.5 w-2.5 rounded-full bg-blue-500 shadow-[0_0_18px_rgba(59,130,246,0.85)]"
+        animate={{ y: [0, -10, 0], x: [0, 8, 0] }}
+        transition={{ duration: 5.4, repeat: Infinity, ease: "easeInOut" }}
       />
     </div>
   );
@@ -110,56 +175,58 @@ function Gyroscope({ scrollYProgress }) {
 
 function PremiumCard({ card, index, scrollYProgress, mobile = false }) {
   const featured = card.label === "03";
+  const Icon = cardIcons[index % cardIcons.length];
 
   const start = 0.79 + index * 0.025;
   const end = start + 0.06;
 
-  const rawOpacity = useTransform(scrollYProgress, [start, end], [0, 1]);
-  const rawX = useTransform(
+  const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
+  const xBase = useTransform(
     scrollYProgress,
     [start, end],
     [featured ? 0 : -14, 0]
   );
-  const rawY = useTransform(scrollYProgress, [start, end], [32, 0]);
-  const rawScale = useTransform(scrollYProgress, [start, end], [0.96, 1]);
-  const rawRotate = useTransform(
+  const yBase = useTransform(scrollYProgress, [start, end], [28, 0]);
+  const scaleBase = useTransform(scrollYProgress, [start, end], [0.965, 1]);
+  const rotateBase = useTransform(
     scrollYProgress,
     [start, end],
     [featured ? 0 : -2, 0]
   );
 
   const springConfig = { stiffness: 60, damping: 20, mass: 0.8 };
-  const opacity = useSpring(rawOpacity, springConfig);
-  const x = useSpring(rawX, springConfig);
-  const y = useSpring(rawY, springConfig);
-  const scale = useSpring(rawScale, springConfig);
-  const rotate = useSpring(rawRotate, springConfig);
+  const x = useSpring(xBase, springConfig);
+  const y = useSpring(yBase, springConfig);
+  const scale = useSpring(scaleBase, springConfig);
+  const rotate = useSpring(rotateBase, springConfig);
 
   const shell = (
     <div
-      className={`group relative overflow-hidden rounded-[24px] p-[1px] shadow-2xl transition-shadow duration-500 ${
-        featured ? "shadow-cyan-500/30" : "shadow-black/60"
+      className={`group relative overflow-hidden rounded-[26px] p-[1px] transition-shadow duration-500 ${
+        featured ? "shadow-[0_22px_60px_-24px_rgba(34,211,238,0.3)]" : "shadow-[0_16px_40px_-28px_rgba(0,0,0,0.6)]"
       }`}
     >
       <Motion.div
         aria-hidden="true"
-        className="absolute inset-0 opacity-25"
+        className="absolute inset-0 opacity-20"
         style={{
           background:
-            "linear-gradient(135deg,rgba(34,211,238,0.35),rgba(59,130,246,0.15),rgba(255,255,255,0.04))",
+            "linear-gradient(135deg,rgba(34,211,238,0.28),rgba(59,130,246,0.16),rgba(255,255,255,0.05))",
         }}
       />
+
       <Motion.div
         aria-hidden="true"
         className="absolute inset-0 opacity-0 group-hover:opacity-100"
         style={{
           background:
-            "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 24%), radial-gradient(circle at 80% 0%, rgba(34,211,238,0.18), transparent 20%), radial-gradient(circle at 50% 100%, rgba(59,130,246,0.12), transparent 20%)",
+            "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.14), transparent 24%), radial-gradient(circle at 80% 0%, rgba(34,211,238,0.18), transparent 20%), radial-gradient(circle at 50% 100%, rgba(59,130,246,0.12), transparent 20%)",
         }}
         transition={{ duration: 0.35 }}
       />
+
       <div
-        className={`relative h-full w-full rounded-[23px] bg-[#08111f]/95 backdrop-blur-xl p-5 flex flex-col justify-between border border-white/10 min-h-[184px] overflow-hidden ${
+        className={`relative h-full w-full rounded-[25px] bg-[#08111f]/92 backdrop-blur-xl p-5 flex flex-col justify-between border border-white/10 min-h-[180px] overflow-hidden ${
           featured ? "ring-1 ring-cyan-400/10" : ""
         }`}
       >
@@ -198,15 +265,18 @@ function PremiumCard({ card, index, scrollYProgress, mobile = false }) {
           />
         </div>
 
-        <h3
-          className={`relative z-10 font-bold mb-3 leading-tight ${
-            featured
-              ? "text-2xl md:text-3xl text-white"
-              : "text-xl text-slate-100"
-          }`}
-        >
-          {card.title}
-        </h3>
+        <Motion.div className="relative z-10 mb-3 flex items-start justify-between gap-3">
+          <h3
+            className={`font-bold leading-tight ${
+              featured ? "text-2xl md:text-3xl text-white" : "text-xl text-slate-100"
+            }`}
+          >
+            {card.title}
+          </h3>
+          <div className="mt-1 text-cyan-300/40 group-hover:text-cyan-300/80 transition-colors">
+            <Icon size={15} />
+          </div>
+        </Motion.div>
 
         <p
           className={`relative z-10 text-sm leading-relaxed ${
@@ -237,10 +307,7 @@ function PremiumCard({ card, index, scrollYProgress, mobile = false }) {
 
   if (mobile) {
     return (
-      <Motion.div
-        style={{ opacity, x, y, scale }}
-        className="will-change-transform"
-      >
+      <Motion.div style={{ opacity, x, y, scale }} className="will-change-transform">
         {shell}
       </Motion.div>
     );
@@ -248,24 +315,30 @@ function PremiumCard({ card, index, scrollYProgress, mobile = false }) {
 
   return (
     <div className="absolute hidden lg:block" style={cardSlots[card.label]}>
-      <Motion.div
-        style={{ x, y, rotate, scale, opacity }}
-        className="will-change-transform"
-      >
+      <Motion.div style={{ x, y, rotate, scale, opacity }} className="will-change-transform">
         {shell}
       </Motion.div>
     </div>
   );
 }
 
-function LineChip({ value, label }) {
+function SignalChip({ value, label }) {
   return (
-    <div>
+    <Motion.div
+      whileHover={{ y: -2 }}
+      className="relative"
+    >
+      <Motion.div
+        aria-hidden="true"
+        className="absolute -left-3 top-1 h-8 w-px bg-gradient-to-b from-cyan-400/70 to-transparent"
+        animate={{ opacity: [0.35, 1, 0.35] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      />
       <div className="text-xl sm:text-2xl font-black text-white">{value}</div>
       <div className="mt-1 text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-cyan-300 font-bold">
         {label}
       </div>
-    </div>
+    </Motion.div>
   );
 }
 
@@ -278,10 +351,10 @@ const OfferingsDifferentiationSection = ({
     [0.77, 0.8, 0.94, 0.96],
     [0, 1, 1, 0]
   );
-  const sectionY = useTransform(scrollYProgress, [0.77, 0.8], [40, 0]);
+  const sectionY = useTransform(scrollYProgress, [0.77, 0.8], [34, 0]);
 
   const leftBlockY = useSpring(
-    useTransform(scrollYProgress, [0.79, 0.85], [20, 0]),
+    useTransform(scrollYProgress, [0.79, 0.85], [18, 0]),
     { stiffness: 50, damping: 20 }
   );
   const leftBlockOpacity = useTransform(
@@ -290,29 +363,30 @@ const OfferingsDifferentiationSection = ({
     [0, 1]
   );
 
+  const titleReveal1 = useTransform(scrollYProgress, [0.78, 0.82], ["100%", "0%"]);
+  const titleReveal2 = useTransform(scrollYProgress, [0.79, 0.83], ["100%", "0%"]);
+  const titleReveal3 = useTransform(scrollYProgress, [0.8, 0.84], ["100%", "0%"]);
+
+  const pathProgress = useTransform(
+    scrollYProgress,
+    [0.8, 0.87, 0.95, 1],
+    [0, 0.8, 1, 1]
+  );
+
   return (
     <Motion.section
       style={{ opacity: sectionOpacity, y: sectionY }}
       aria-hidden={!isActive}
-      className={`absolute inset-x-0 top-0 bottom-0 z-[49] overflow-hidden bg-[#050816] text-white flex items-start min-h-[100svh] ${
+      className={`absolute inset-0 z-[49] overflow-hidden bg-[#050816] text-white flex items-start min-h-[100svh] ${
         isActive ? "pointer-events-auto visible" : "pointer-events-none invisible"
       }`}
     >
-      <Gyroscope scrollYProgress={scrollYProgress} />
+      <AmbientField scrollYProgress={scrollYProgress} />
 
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-blue-800/10 blur-[140px]" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-cyan-800/10 blur-[140px]" />
       </div>
-
-      <div
-        className="absolute inset-0 pointer-events-none opacity-20"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-          backgroundSize: "80px 80px",
-        }}
-      />
 
       <div className="relative z-10 w-full h-full max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 px-4 sm:px-6 md:px-12 lg:px-20 pt-[92px] sm:pt-[96px] lg:pt-[104px] pb-4 sm:pb-5 items-start">
         <Motion.div
@@ -332,7 +406,7 @@ const OfferingsDifferentiationSection = ({
           <div className="space-y-1 sm:space-y-2">
             <div className="overflow-hidden h-[72px] sm:h-[84px] lg:h-[96px]">
               <Motion.h2
-                style={{ y: useTransform(scrollYProgress, [0.78, 0.82], ["100%", "0%"]) }}
+                style={{ y: titleReveal1 }}
                 className="text-[3.3rem] sm:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-[0.95]"
               >
                 <span className="block text-white">Programs.</span>
@@ -340,7 +414,7 @@ const OfferingsDifferentiationSection = ({
             </div>
             <div className="overflow-hidden h-[72px] sm:h-[84px] lg:h-[96px]">
               <Motion.h2
-                style={{ y: useTransform(scrollYProgress, [0.79, 0.83], ["100%", "0%"]) }}
+                style={{ y: titleReveal2 }}
                 className="text-[3.3rem] sm:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-[0.95]"
               >
                 <span className="block text-cyan-300">Services.</span>
@@ -348,7 +422,7 @@ const OfferingsDifferentiationSection = ({
             </div>
             <div className="overflow-hidden h-[84px] sm:h-[92px] lg:h-[100px]">
               <Motion.h2
-                style={{ y: useTransform(scrollYProgress, [0.8, 0.84], ["100%", "0%"]) }}
+                style={{ y: titleReveal3 }}
                 className="text-[3.3rem] sm:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-[0.95] text-slate-400"
               >
                 <span className="block">Infrastructure.</span>
@@ -369,7 +443,7 @@ const OfferingsDifferentiationSection = ({
 
           <div className="mb-8 sm:mb-10 grid grid-cols-3 gap-4 border-l border-cyan-500/20 pl-4 sm:pl-6">
             {leftSignals.map((signal) => (
-              <LineChip
+              <SignalChip
                 key={signal.label}
                 value={signal.value}
                 label={signal.label}
@@ -411,12 +485,12 @@ const OfferingsDifferentiationSection = ({
           <Motion.svg
             aria-hidden="true"
             viewBox="0 0 1200 820"
-            className="absolute inset-0 h-full w-full pointer-events-none hidden lg:block opacity-60"
+            className="absolute inset-0 h-full w-full pointer-events-none hidden lg:block opacity-55"
           >
             <Motion.path
               d="M155 170 C 320 140, 410 180, 560 320 S 870 460, 1020 280"
               fill="none"
-              stroke="rgba(34,211,238,0.25)"
+              stroke="rgba(34,211,238,0.24)"
               strokeWidth="1.3"
               strokeDasharray="7 12"
             />
@@ -433,15 +507,18 @@ const OfferingsDifferentiationSection = ({
               stroke="rgba(34,211,238,0.7)"
               strokeWidth="2.1"
               strokeLinecap="round"
-              style={{
-                pathLength: useTransform(
-                  scrollYProgress,
-                  [0.8, 0.87, 0.95, 1],
-                  [0, 0.8, 1, 1]
-                ),
-              }}
+              style={{ pathLength: pathProgress }}
               pathLength={0}
               filter="drop-shadow(0 0 18px rgba(34,211,238,0.35))"
+            />
+            <Motion.path
+              d="M380 320 C 470 230, 610 230, 700 320"
+              fill="none"
+              stroke="rgba(59,130,246,0.18)"
+              strokeWidth="1.1"
+              strokeDasharray="3 10"
+              style={{ pathLength: useTransform(scrollYProgress, [0.8, 0.9], [0, 1]) }}
+              pathLength={0}
             />
           </Motion.svg>
 
@@ -472,7 +549,9 @@ const OfferingsDifferentiationSection = ({
 
       <div className="absolute bottom-3 left-4 right-4 sm:left-6 sm:right-6 lg:left-8 lg:right-8 flex justify-between items-end border-t border-white/5 pt-3">
         <Motion.div
-          style={{ opacity: useTransform(scrollYProgress, [0.45, 0.48], [0, 1]) }}
+          style={{
+            opacity: useTransform(scrollYProgress, [0.45, 0.48], [0, 1]),
+          }}
           className="max-w-xs space-y-2"
         >
           <span className="text-[9px] font-black text-blue-500 uppercase tracking-[0.5em]">
