@@ -1,5 +1,5 @@
 ﻿import React, { useRef, useState } from "react";
-import { useMotionValueEvent, useScroll } from "framer-motion";
+import { useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import AudienceUtilitySection from "../components/Home/AudienceUtilitySection";
 import EcosystemHighlightsSection from "../components/Home/EcosystemHighlightsSection";
 import HomeBackgroundGridSection from "../components/Home/HomeBackgroundGridSection";
@@ -57,28 +57,6 @@ const DesignerStartupLanding = () => {
     [0, 1]
   );
   const footerScale = useTransform(scrollYProgress, [0.996, 1], [1.05, 1]);
-
-  const pinScales = [
-    pin1Scale,
-    pin2Scale,
-    pin3Scale,
-    pin4Scale,
-    pin5Scale,
-    pin6Scale,
-    pin7Scale,
-    pin8Scale,
-  ];
-
-  const pinOpacities = [
-    pin1Opacity,
-    pin2Opacity,
-    pin3Opacity,
-    pin4Opacity,
-    pin5Opacity,
-    pin6Opacity,
-    pin7Opacity,
-    pin8Opacity,
-  ];
 
   return (
     <div
