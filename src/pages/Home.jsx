@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+﻿import React, { useRef, useState } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import AudienceUtilitySection from "../components/Home/AudienceUtilitySection";
 import EcosystemHighlightsSection from "../components/Home/EcosystemHighlightsSection";
@@ -28,9 +28,9 @@ const DesignerStartupLanding = () => {
         ? "mission"
         : latest < 0.77
         ? "audience"
-        : latest < 0.945
+        : latest < 0.93
         ? "offerings"
-        : latest < 0.975
+        : latest < 0.97
         ? "ecosystem"
         : "contact";
 
@@ -41,6 +41,44 @@ const DesignerStartupLanding = () => {
   const offeringsActive = activePhase === "offerings";
   const ecosystemActive = activePhase === "ecosystem";
   const contactActive = activePhase === "contact";
+
+  // Contact
+  const contactOpacity = useTransform(
+    scrollYProgress,
+    [0.968, 0.978, 0.992, 0.996],
+    [0, 1, 1, 0]
+  );
+  const contactY = useTransform(scrollYProgress, [0.968, 0.978], [60, 0]);
+
+  // Final reveal
+  const footerOpacity = useTransform(
+    scrollYProgress,
+    [0.996, 1],
+    [0, 1]
+  );
+  const footerScale = useTransform(scrollYProgress, [0.996, 1], [1.05, 1]);
+
+  const pinScales = [
+    pin1Scale,
+    pin2Scale,
+    pin3Scale,
+    pin4Scale,
+    pin5Scale,
+    pin6Scale,
+    pin7Scale,
+    pin8Scale,
+  ];
+
+  const pinOpacities = [
+    pin1Opacity,
+    pin2Opacity,
+    pin3Opacity,
+    pin4Opacity,
+    pin5Opacity,
+    pin6Opacity,
+    pin7Opacity,
+    pin8Opacity,
+  ];
 
   return (
     <div
