@@ -1,19 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   AnimatePresence,
   motion as Motion,
   useMotionTemplate,
   useMotionValue,
+  useScroll,
   useSpring,
   useTransform,
 } from "framer-motion";
-import {
-  MousePointer2,
-  Radio,
-  ShieldCheck,
-  Cpu,
-  Zap,
-} from "lucide-react";
 
 const testimonials = [
   {
@@ -38,34 +32,29 @@ const titleText2 = "founders in motion.";
 
 function TypewriterTitle({ isActive }) {
   return (
-    <h2 className="max-w-6xl select-none text-2xl font-black leading-[0.82] tracking-tighter sm:text-4xl md:text-6xl lg:text-[64px]">
+    <h2 className="select-none text-center text-3xl font-black leading-[0.82] tracking-tighter sm:text-5xl md:text-7xl lg:text-[86px]">
       <Motion.span
-        initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 18, clipPath: "inset(0 100% 0 0)" }}
         animate={
           isActive
-            ? { clipPath: "inset(0 0% 0 0)", opacity: 1, y: 0 }
-            : { clipPath: "inset(0 100% 0 0)", opacity: 0, y: 12 }
+            ? { opacity: 1, y: 0, clipPath: "inset(0 0% 0 0)" }
+            : { opacity: 0, y: 18, clipPath: "inset(0 100% 0 0)" }
         }
-        transition={{ duration: 1.15, ease: [0.16, 1, 0.3, 1] }}
-        className="block whitespace-nowrap text-[#0f49ff] drop-shadow-[0_0_18px_rgba(37,99,235,0.22)]"
+        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+        className="block whitespace-nowrap text-white drop-shadow-[0_0_24px_rgba(255,255,255,0.14)]"
       >
         {titleText1}
-        <span className="ml-1 inline-block h-[0.95em] w-[0.18em] translate-y-[0.1em] bg-[#0f49ff] align-middle animate-pulse" />
       </Motion.span>
 
       <Motion.span
-        initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 18, clipPath: "inset(0 100% 0 0)" }}
         animate={
           isActive
-            ? { clipPath: "inset(0 0% 0 0)", opacity: 1, y: 0 }
-            : { clipPath: "inset(0 100% 0 0)", opacity: 0, y: 12 }
+            ? { opacity: 1, y: 0, clipPath: "inset(0 0% 0 0)" }
+            : { opacity: 0, y: 18, clipPath: "inset(0 100% 0 0)" }
         }
-        transition={{
-          duration: 1.15,
-          delay: 0.28,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-        className="block whitespace-nowrap bg-gradient-to-r from-[#0f49ff] via-[#4f7cff] to-[#7c6cff] bg-clip-text text-transparent drop-shadow-[0_0_18px_rgba(79,124,255,0.18)]"
+        transition={{ duration: 1.1, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
+        className="block whitespace-nowrap bg-gradient-to-r from-white via-[#7dd3fc] to-[#0f49ff] bg-clip-text text-transparent drop-shadow-[0_0_28px_rgba(15,73,255,0.18)]"
       >
         {titleText2}
       </Motion.span>
@@ -79,7 +68,9 @@ const CardWrapper = ({
   delay = 0,
   side = "left",
   active = true,
-  slideOnly = false,
+  rotate = 0,
+  accent = "blue",
+  expanded = false,
 }) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -90,102 +81,127 @@ const CardWrapper = ({
     mouseY.set(clientY - top);
   }
 
+  const accentGlow =
+    accent === "white"
+      ? "rgba(255,255,255,0.8)"
+      : accent === "black"
+      ? "rgba(0,0,0,0.9)"
+      : accent === "cyan"
+      ? "rgba(34,211,238,0.85)"
+      : accent === "violet"
+      ? "rgba(124,93,255,0.85)"
+      : "rgba(15,73,255,0.85)";
+
   return (
     <Motion.div
       initial={{
         opacity: 0,
-        x: side === "left" ? -100 : 100,
-        y: slideOnly ? 0 : 16,
-        scale: 0.98,
-        rotate: slideOnly ? 0 : side === "left" ? -1.5 : 1.5,
-        filter: "blur(8px)",
+        y: 34,
+        x: side === "left" ? -80 : 80,
+        scale: 0.94,
+        rotate: rotate + (side === "left" ? -3 : 3),
       }}
       animate={
         active
           ? {
               opacity: 1,
-              x: 0,
               y: 0,
-              scale: 1,
-              rotate: 0,
-              filter: "blur(0px)",
+              x: 0,
+              scale: expanded ? 1.11 : 1,
+              rotate,
             }
           : {
               opacity: 0,
-              x: side === "left" ? -70 : 70,
-              y: slideOnly ? 0 : 12,
-              scale: 0.99,
-              rotate: 0,
-              filter: "blur(6px)",
+              y: 22,
+              x: side === "left" ? -50 : 50,
+              scale: 0.98,
+              rotate,
             }
       }
+      whileHover={{
+        scale: expanded ? 1.14 : 1.08,
+        y: -10,
+        zIndex: 60,
+      }}
       transition={{
-        duration: 0.85,
+        duration: 0.95,
         delay,
         ease: [0.16, 1, 0.3, 1],
       }}
       onMouseMove={handleMouseMove}
-      className={`group relative overflow-hidden transition-all duration-500 ${className}`}
+      className={`group relative overflow-hidden rounded-[28px] transition-transform duration-500 sm:rounded-[34px] ${className}`}
+      style={{
+        boxShadow: `0 0 0 1px ${accentGlow}, 0 28px 80px rgba(0,0,0,0.24)`,
+      }}
     >
       <Motion.div
-        className="pointer-events-none absolute -inset-px rounded-[inherit] opacity-0 transition duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100"
         style={{
-          background: useMotionTemplate`radial-gradient(360px circle at ${mouseX}px ${mouseY}px, rgba(37, 99, 235, 0.18), transparent 72%)`,
+          background: useMotionTemplate`radial-gradient(340px circle at ${mouseX}px ${mouseY}px, rgba(15,73,255,0.18), transparent 72%)`,
+        }}
+      />
+      <Motion.div
+        animate={active ? { opacity: [0.12, 0.38, 0.12] } : { opacity: 0.12 }}
+        transition={{ duration: 3.8, repeat: active ? Infinity : 0, ease: "easeInOut" }}
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.12),transparent_22%,transparent_78%,rgba(255,255,255,0.06))]"
+      />
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] border"
+        style={{
+          borderColor:
+            accent === "black"
+              ? "rgba(255,255,255,0.1)"
+              : accent === "white"
+              ? "rgba(15,23,42,0.08)"
+              : "rgba(255,255,255,0.12)",
         }}
       />
       {children}
+      <Motion.div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px"
+        animate={active ? { opacity: [0.2, 0.9, 0.2] } : { opacity: 0.2 }}
+        transition={{ duration: 2.8, repeat: active ? Infinity : 0, ease: "easeInOut" }}
+        style={{
+          background:
+            accent === "black"
+              ? "linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent)"
+              : "linear-gradient(90deg,transparent,rgba(15,73,255,0.8),transparent)",
+        }}
+      />
     </Motion.div>
   );
 };
 
-const DynamicBackground = ({ scrollProgress }) => {
-  const rotate = useTransform(scrollProgress, [0.92, 1], [0, 90]);
-  const y1 = useTransform(scrollProgress, [0.92, 1], [0, -60]);
-  const y2 = useTransform(scrollProgress, [0.92, 1], [0, -120]);
+const AmbientBackground = ({ scrollProgress }) => {
+  const driftA = useTransform(scrollProgress, [0.9, 1], [0, -60]);
+  const driftB = useTransform(scrollProgress, [0.9, 1], [0, 70]);
+  const spin = useTransform(scrollProgress, [0.9, 1], [0, 120]);
 
   return (
-    <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.14),transparent_26%),radial-gradient(circle_at_80%_25%,rgba(14,165,233,0.12),transparent_24%),radial-gradient(circle_at_60%_80%,rgba(99,102,241,0.12),transparent_28%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.6)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.6)_1px,transparent_1px)] bg-[size:120px_120px] opacity-[0.04]" />
-
+    <div className="absolute inset-0 -z-10 overflow-hidden bg-[radial-gradient(circle_at_center,#10131d_0%,#05060b_48%,#020308_100%)]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(15,73,255,0.18),transparent_30%),radial-gradient(circle_at_15%_20%,rgba(255,255,255,0.07),transparent_18%),radial-gradient(circle_at_85%_78%,rgba(124,93,255,0.08),transparent_20%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:72px_72px] opacity-25" />
       <Motion.div
-        style={{ rotate }}
+        style={{ rotate: spin }}
         animate={{ rotate: [0, 360] }}
-        transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-        className="absolute left-1/2 top-1/2 h-[760px] w-[760px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-blue-300/35 sm:h-[900px] sm:w-[900px]"
-      >
-        <div className="absolute left-1/4 top-10 h-3 w-3 rounded-full bg-[#0f49ff] blur-sm animate-pulse" />
-        <div className="absolute bottom-20 right-1/3 h-2 w-2 rounded-full bg-[#7c6cff]" />
-      </Motion.div>
-
-      <Motion.div
-        style={{ y: y1 }}
-        className="absolute right-[8%] top-1/4 h-24 w-24 rounded-full bg-gradient-to-br from-blue-200/70 via-sky-200/30 to-transparent blur-2xl opacity-50 sm:right-[10%] sm:h-32 sm:w-32"
+        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+        className="absolute left-1/2 top-1/2 h-[980px] w-[980px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-white/10 sm:h-[1180px] sm:w-[1180px]"
       />
       <Motion.div
-        style={{ y: y2 }}
-        className="absolute bottom-1/4 left-[5%] h-40 w-40 rounded-full bg-gradient-to-tr from-indigo-200/70 via-blue-100/50 to-transparent blur-3xl sm:h-64 sm:w-64"
+        style={{ y: driftA }}
+        className="absolute left-[10%] top-[18%] h-32 w-32 rounded-full bg-[#0f49ff]/18 blur-3xl"
       />
       <Motion.div
-        style={{ y: y1 }}
-        className="absolute left-[18%] top-[12%] h-16 w-16 rounded-full bg-cyan-300/20 blur-2xl"
+        style={{ y: driftB }}
+        className="absolute right-[8%] top-[14%] h-40 w-40 rounded-full bg-cyan-300/12 blur-3xl"
       />
       <Motion.div
-        style={{ y: y2 }}
-        className="absolute bottom-[18%] right-[18%] h-24 w-24 rounded-full bg-violet-300/20 blur-3xl"
-      />
-
-      <Motion.div
-        aria-hidden="true"
-        className="absolute inset-x-0 top-[22%] h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"
-        animate={{ opacity: [0.18, 0.6, 0.18] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        style={{ y: driftA }}
+        className="absolute bottom-[16%] left-[18%] h-44 w-44 rounded-full bg-violet-300/12 blur-3xl"
       />
       <Motion.div
-        aria-hidden="true"
-        className="absolute inset-x-0 bottom-[18%] h-px bg-gradient-to-r from-transparent via-blue-400/18 to-transparent"
-        animate={{ opacity: [0.12, 0.45, 0.12] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        style={{ y: driftB }}
+        className="absolute bottom-[10%] right-[18%] h-28 w-28 rounded-full bg-white/10 blur-2xl"
       />
     </div>
   );
@@ -194,31 +210,43 @@ const DynamicBackground = ({ scrollProgress }) => {
 const TestimonialCard = ({ item, active, index }) => {
   return (
     <Motion.div
-      initial={{ opacity: 0, y: 18, filter: "blur(10px)" }}
+      initial={{ opacity: 0, y: 18, rotate: -2, scale: 0.98, filter: "blur(10px)" }}
       animate={{
         opacity: active ? 1 : 0,
         y: active ? 0 : 18,
+        rotate: active ? 0 : -2,
+        scale: active ? 1 : 0.98,
         filter: active ? "blur(0px)" : "blur(10px)",
       }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className={`absolute inset-0 flex flex-col justify-center ${
-        active ? "pointer-events-auto" : "pointer-events-none"
-      }`}
+      transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+      className={`absolute inset-0 flex flex-col justify-center ${active ? "pointer-events-auto" : "pointer-events-none"}`}
     >
-      <p className="mb-4 text-base font-semibold leading-tight text-slate-800 sm:mb-5 sm:text-lg md:text-xl">
-        "{item.quote}"
-      </p>
-      <div className="flex items-center gap-4">
-        <div className="h-[1px] w-8 bg-slate-300" />
-        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-400 sm:text-xs sm:tracking-[0.3em]">
+      <div className="absolute left-0 top-0 h-24 w-24 rounded-full bg-[#0f49ff]/10 blur-2xl" />
+      <div className="absolute right-0 top-0 h-20 w-20 rounded-full bg-violet-300/10 blur-2xl" />
+      <div className="absolute bottom-0 right-0 h-28 w-28 rounded-full bg-cyan-300/10 blur-2xl" />
+
+      <div className="mb-4 flex items-center gap-3">
+        <div className="h-px w-10 bg-slate-300" />
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
           {item.name}
         </p>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-slate-50" />
+
+      <p className="max-w-3xl text-balance text-[15px] font-semibold leading-tight text-slate-900 sm:text-[17px] md:text-[22px]">
+        "{item.quote}"
+      </p>
+
+      <div className="mt-6 flex items-center gap-3">
+        <div className="h-2 w-2 rounded-full bg-[#0f49ff]" />
+        <div className="h-2 w-2 rounded-full bg-[#7c6cff]" />
+        <div className="h-2 w-2 rounded-full bg-[#0ea5e9]" />
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/70" />
       <Motion.div
         animate={{ width: active ? "100%" : "0%" }}
         transition={{ duration: active ? 4 : 0.2, ease: "linear" }}
-        className="absolute bottom-0 left-0 h-1 bg-blue-600"
+        className="absolute bottom-0 left-0 h-1 bg-[#0f49ff]"
       />
       <div className="absolute right-0 top-0 text-[10px] font-black uppercase tracking-[0.3em] text-slate-300">
         {String(index + 1).padStart(2, "0")}
@@ -228,172 +256,117 @@ const TestimonialCard = ({ item, active, index }) => {
 };
 
 const EcosystemHighlightsSection = ({ scrollYProgress, isActive = true }) => {
-  const [testIndex, setTestIndex] = useState(0);
   const [titleReady, setTitleReady] = useState(false);
+  const [panelIndex, setPanelIndex] = useState(-1);
+  const [testIndex, setTestIndex] = useState(0);
+  const [expandedCard, setExpandedCard] = useState(null);
+  const sectionRef = useRef(null);
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const titleTimer = setTimeout(() => setTitleReady(true), 800);
+    const firstReveal = setTimeout(() => setPanelIndex(0), 1150);
+    const revealTimer = setInterval(() => {
+      setPanelIndex((prev) => (prev + 1) % 6);
+    }, 950);
+    const testTimer = setInterval(() => {
       setTestIndex((prev) => (prev + 1) % testimonials.length);
-    }, 4000);
-
-    const revealTimer = setTimeout(() => {
-      setTitleReady(true);
-    }, 4000);
+    }, 3800);
 
     return () => {
-      clearInterval(timer);
-      clearTimeout(revealTimer);
+      clearTimeout(titleTimer);
+      clearTimeout(firstReveal);
+      clearInterval(revealTimer);
+      clearInterval(testTimer);
     };
   }, []);
 
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 90,
-    damping: 26,
+    damping: 24,
   });
 
-  const ecosystemOpacity = useTransform(
+  const opacity = useTransform(
     scrollYProgress,
-    [0.915, 0.925, 0.945, 0.955],
+    [0.915, 0.925, 0.955, 0.965],
     [0, 1, 1, 0]
   );
-  const ecosystemY = useTransform(scrollYProgress, [0.915, 0.925], [52, 0]);
-
-  const rotate = useTransform(scrollYProgress, [0.95, 1], [0, 360]);
-
-  const launchReveal = useTransform(scrollYProgress, [0.925, 0.945], [0, 1]);
-  const dayOneReveal = useTransform(scrollYProgress, [0.935, 0.955], [0, 1]);
-  const communityReveal = useTransform(scrollYProgress, [0.945, 0.965], [0, 1]);
-  const testimonialReveal = useTransform(scrollYProgress, [0.945, 0.965], [0, 1]);
-  const executeReveal = useTransform(scrollYProgress, [0.955, 0.975], [0, 1]);
-
-  const launchY = useTransform(scrollYProgress, [0.925, 0.945], [18, 0]);
-  const dayOneY = useTransform(scrollYProgress, [0.935, 0.955], [18, 0]);
-  const communityY = useTransform(scrollYProgress, [0.945, 0.965], [18, 0]);
-  const testimonialY = useTransform(scrollYProgress, [0.945, 0.965], [18, 0]);
-  const executeY = useTransform(scrollYProgress, [0.955, 0.975], [18, 0]);
+  const y = useTransform(scrollYProgress, [0.915, 0.925], [42, 0]);
 
   const titleOpacity = useTransform(smoothProgress, [0.918, 0.928], [0, 1]);
   const titleScale = useTransform(smoothProgress, [0.918, 0.928], [0.985, 1]);
 
-  return (
-    <Motion.div
-      style={{ opacity: ecosystemOpacity, y: ecosystemY }}
-      aria-hidden={!isActive}
-      className={`absolute inset-0 z-[50] flex min-h-[100svh] items-start overflow-hidden bg-white font-sans ${
-        isActive ? "pointer-events-auto visible" : "pointer-events-none invisible"
-      }`}
-    >
-      <DynamicBackground scrollProgress={scrollYProgress} />
-
-      <Motion.div
-        style={{ rotate }}
-        className="pointer-events-none absolute inset-0 opacity-[0.06]"
-      />
-
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-8 pt-20 sm:px-6 sm:pt-24 md:px-10 lg:px-12">
-        <div className="mb-5 sm:mb-7 lg:mb-8">
-          <Motion.div
-            initial={{ opacity: 0, x: -24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            className="mb-5 flex items-center gap-3"
-          >
-            <Motion.div
-              animate={{ width: [40, 58, 40] }}
-              transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
-              className="h-[2px] w-10 bg-gradient-to-r from-[#0f49ff] via-[#4f7cff] to-[#7c6cff] shadow-[0_0_18px_rgba(79,124,255,0.45)] sm:w-12"
-            />
-            <span className="text-[10px] font-black uppercase tracking-[0.35em] text-[#0f49ff] sm:text-[12px] sm:tracking-[0.5em]">
-              Ecosystem Highlights - 05
-            </span>
-          </Motion.div>
-
-          <Motion.div style={{ opacity: titleOpacity, scale: titleScale }}>
-            <TypewriterTitle isActive={titleReady} />
-          </Motion.div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-12 lg:gap-5">
-          <CardWrapper
-            side="left"
-            delay={0.08}
-            active={isActive}
-            slideOnly
-            className="lg:col-span-5 overflow-hidden rounded-[28px] border border-blue-500/10 bg-[linear-gradient(135deg,#050505_0%,#0b1124_100%)] p-5 text-white shadow-2xl shadow-blue-950/20 sm:rounded-[34px] sm:p-7 md:p-8"
-          >
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(15,73,255,0.18),transparent_28%),radial-gradient(circle_at_78%_0%,rgba(76,224,255,0.12),transparent_24%)]" />
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/50 to-transparent" />
-            <p className="relative z-10 mb-5 text-[10px] font-black uppercase tracking-[0.35em] text-[#7aa0ff] sm:mb-8 sm:text-[11px] sm:tracking-[0.4em]">
+  const panelStates = useMemo(
+    () => [
+      {
+        id: 1,
+        tone: "white",
+        className:
+          "bg-white text-slate-950 border-white/80 shadow-[0_20px_70px_rgba(255,255,255,0.08)]",
+        content: (
+          <div className="flex h-full flex-col">
+            <p className="text-[10px] font-black uppercase tracking-[0.42em] text-[#0f49ff]">
               Launch Pad
             </p>
-            <h3 className="relative z-10 mb-3 text-xl font-bold leading-tight tracking-tight sm:mb-4 sm:text-2xl md:text-3xl">
+            <h3 className="mt-3 max-w-sm text-[1.5rem] font-black leading-[0.92] tracking-tight sm:text-[1.85rem]">
               A stage for founders to introduce their startup.
             </h3>
-            <p className="relative z-10 max-w-prose text-xs font-medium leading-relaxed text-slate-300 sm:text-sm md:text-base">
+            <p className="mt-3 max-w-sm text-[12px] font-medium leading-relaxed text-slate-500 sm:text-sm">
               Present your startup, gain visibility, and begin your journey with momentum.
             </p>
-          </CardWrapper>
-
-          <CardWrapper
-            side="right"
-            delay={0.22}
-            active={isActive}
-            slideOnly
-            className="lg:col-span-4 flex flex-col justify-between overflow-hidden rounded-[28px] border border-blue-100 bg-[linear-gradient(180deg,#ffffff_0%,#f2f6ff_100%)] p-5 shadow-xl sm:rounded-[34px] sm:p-7 md:p-8"
-          >
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(15,73,255,0.08),transparent_26%)]" />
-            <div>
-              <p className="relative z-10 mb-5 text-[10px] font-black uppercase tracking-[0.35em] text-[#0f49ff] sm:mb-8 sm:text-[11px] sm:tracking-[0.4em]">
-                Day One Services
-              </p>
-              <h3 className="relative z-10 text-lg font-bold leading-tight tracking-tight text-slate-900 sm:text-xl md:text-2xl">
-                Registration. Branding. Website.
-              </h3>
-            </div>
-            <p className="relative z-10 mt-4 text-sm font-semibold leading-relaxed text-slate-500 sm:text-base">
+          </div>
+        ),
+      },
+      {
+        id: 2,
+        tone: "black",
+        className:
+          "bg-[linear-gradient(145deg,#020202_0%,#0d1320_55%,#111827_100%)] text-white border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.55)]",
+        content: (
+          <div className="flex h-full flex-col">
+            <p className="text-[10px] font-black uppercase tracking-[0.42em] text-[#7dd3fc]">
+              Day One Services
+            </p>
+            <h3 className="mt-3 text-[1.45rem] font-black leading-[0.9] tracking-tight sm:text-[1.95rem]">
+              Registration. Branding. Website.
+            </h3>
+            <p className="mt-3 max-w-sm text-[12px] font-medium leading-relaxed text-slate-300 sm:text-sm">
               A professional service layer for company basics.
             </p>
-          </CardWrapper>
-
-          <Motion.div
-            style={{ opacity: communityReveal, y: communityY }}
-            className="lg:col-span-3 overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(160deg,#1d4ed8_0%,#2563eb_35%,#0ea5e9_100%)] p-5 text-white shadow-2xl shadow-blue-500/30 sm:rounded-[34px] sm:p-7 md:p-8"
-          >
-            <Motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-              className="absolute -right-10 -top-10 h-40 w-40 rounded-full border border-white/10"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.12),transparent_26%)]" />
-            <p className="relative z-10 mb-6 text-[10px] font-black uppercase tracking-[0.35em] text-blue-50 sm:mb-10 sm:text-[11px] sm:tracking-[0.4em]">
+          </div>
+        ),
+      },
+      {
+        id: 3,
+        tone: "blue",
+        className:
+          "bg-[linear-gradient(160deg,#0f49ff_0%,#2563eb_42%,#0ea5e9_100%)] text-white border-white/15 shadow-[0_24px_70px_rgba(15,73,255,0.38)]",
+        content: (
+          <div className="flex h-full flex-col">
+            <p className="text-[10px] font-black uppercase tracking-[0.42em] text-blue-50">
               Community
             </p>
-            <div className="relative z-10 space-y-4 font-bold sm:space-y-5">
-              {["Founder Meetups", "Live Workshops", "Pitch Rooms"].map((item) => (
-                <Motion.div
-                  key={item}
-                  whileHover={{ x: 10 }}
-                  className="flex cursor-pointer items-center gap-4 text-sm transition-colors hover:text-white/95"
-                >
-                  <div className="h-1.5 w-1.5 rounded-full bg-white" />
-                  {item}
-                </Motion.div>
-              ))}
+            <div className="mt-3 space-y-2.5 text-[15px] font-black leading-tight sm:text-[18px]">
+              <div>Founder Meetups</div>
+              <div>Live Workshops</div>
+              <div>Pitch Rooms</div>
             </div>
-          </Motion.div>
-
-          <Motion.div
-            style={{ opacity: testimonialReveal, y: testimonialY }}
-            className="lg:col-span-7 relative min-h-[220px] overflow-hidden rounded-[28px] border border-slate-100 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(240,245,255,0.9))] p-4 shadow-lg backdrop-blur-xl sm:min-h-[250px] sm:rounded-[34px] sm:p-6 md:p-8"
-          >
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_30%,rgba(15,73,255,0.08),transparent_30%),radial-gradient(circle_at_72%_80%,rgba(124,93,255,0.08),transparent_24%)]" />
-            <div className="absolute left-8 top-6 flex items-center gap-3 sm:left-10 sm:top-8">
+          </div>
+        ),
+      },
+      {
+        id: 4,
+        tone: "white",
+        className:
+          "bg-[linear-gradient(180deg,#ffffff_0%,#f2f6ff_100%)] text-slate-950 border-white/80 shadow-[0_20px_70px_rgba(255,255,255,0.08)]",
+        content: (
+          <div className="flex h-full flex-col">
+            <div className="flex items-center gap-3">
               <div className="h-2 w-2 rounded-full bg-[#0f49ff] animate-pulse" />
-              <p className="text-[10px] font-black uppercase tracking-[0.35em] text-[#0f49ff] sm:text-[11px] sm:tracking-[0.4em]">
+              <p className="text-[10px] font-black uppercase tracking-[0.42em] text-[#0f49ff]">
                 Testimonials
               </p>
             </div>
-
-            <div className="relative h-40 sm:h-44">
+            <div className="relative mt-4 min-h-[170px]">
               <AnimatePresence mode="wait">
                 <TestimonialCard
                   key={testIndex}
@@ -403,37 +376,251 @@ const EcosystemHighlightsSection = ({ scrollYProgress, isActive = true }) => {
                 />
               </AnimatePresence>
             </div>
-          </Motion.div>
-
-          <CardWrapper
-            side="right"
-            delay={0.4}
-            active={isActive}
-            className="group lg:col-span-5 relative overflow-hidden rounded-[28px] border border-blue-500/15 bg-[linear-gradient(135deg,#0b1025_0%,#111827_55%,#1d4ed8_140%)] p-5 text-white shadow-2xl shadow-blue-950/20 sm:rounded-[34px] sm:p-7 md:p-8"
-          >
-            <div className="absolute -bottom-20 -right-20 h-80 w-80 rounded-full bg-[#0f49ff]/25 blur-[100px] transition-colors group-hover:bg-[#0ea5e9]/30" />
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,0.12),transparent_24%),radial-gradient(circle_at_85%_80%,rgba(14,165,233,0.12),transparent_26%)]" />
-            <div className="relative z-10">
-              <p className="mb-5 text-[10px] font-black uppercase tracking-[0.35em] text-cyan-300 sm:mb-8 sm:text-[11px] sm:tracking-[0.4em]">
-                Execute Now
-              </p>
-              <h3 className="mb-5 text-xl font-bold leading-tight tracking-tight sm:mb-7 sm:text-2xl md:text-3xl">
-                Join Startup Park. <br />
-                <span className="text-cyan-300">Scale your vision.</span>
-              </h3>
-            </div>
-            <div className="relative z-10 flex flex-col gap-3 sm:flex-row sm:gap-4">
-              <button className="flex-1 rounded-[18px] bg-white py-4 text-[11px] font-black uppercase tracking-[0.2em] text-black shadow-xl shadow-white/5 transition-transform active:scale-95 hover:scale-105 sm:rounded-[22px] sm:py-5 sm:text-[12px]">
+          </div>
+        ),
+      },
+      {
+        id: 5,
+        tone: "black",
+        className:
+          "bg-[linear-gradient(135deg,#0b1025_0%,#111827_52%,#1d4ed8_135%)] text-white border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.45)]",
+        content: (
+          <div className="flex h-full flex-col">
+            <p className="text-[10px] font-black uppercase tracking-[0.42em] text-cyan-300">
+              Execute Now
+            </p>
+            <h3 className="mt-3 text-[1.55rem] font-black leading-tight tracking-tight sm:text-[2.1rem]">
+              Join Startup Park.
+              <br />
+              <span className="text-cyan-300">Scale your vision.</span>
+            </h3>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+              <button className="rounded-[18px] bg-white px-5 py-4 text-[11px] font-black uppercase tracking-[0.2em] text-black transition-transform active:scale-95 hover:scale-[1.03]">
                 Join Today
               </button>
-              <button className="flex-1 rounded-[18px] border border-white/10 py-4 text-[11px] font-black uppercase tracking-[0.2em] text-white transition-all hover:bg-white/5 sm:rounded-[22px] sm:py-5 sm:text-[12px]">
+              <button className="rounded-[18px] border border-white/15 px-5 py-4 text-[11px] font-black uppercase tracking-[0.2em] text-white transition-colors hover:bg-white/6">
                 Learn More
               </button>
             </div>
-          </CardWrapper>
+          </div>
+        ),
+      },
+      {
+        id: 6,
+        tone: "violet",
+        className:
+          "bg-[linear-gradient(160deg,#7c6cff_0%,#0f49ff_55%,#111827_100%)] text-white border-white/15 shadow-[0_24px_70px_rgba(124,93,255,0.28)]",
+        content: (
+          <div className="flex h-full flex-col">
+            <p className="text-[10px] font-black uppercase tracking-[0.42em] text-blue-50">
+              Ecosystem Pulse
+            </p>
+            <div className="mt-4 space-y-2.5 text-[13px] font-semibold text-blue-50/90 sm:text-sm">
+              <div className="flex items-center gap-3">
+                <div className="h-1.5 w-1.5 rounded-full bg-white" />
+                <span>Access</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="h-1.5 w-1.5 rounded-full bg-white" />
+                <span>Momentum</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="h-1.5 w-1.5 rounded-full bg-white" />
+                <span>Growth</span>
+              </div>
+            </div>
+          </div>
+        ),
+      },
+    ],
+    [testIndex]
+  );
+
+  const desktopPlacement = [
+    "left-[2%] top-[11%] w-[22%] h-[24%]",
+    "right-[2%] top-[10%] w-[22%] h-[24%]",
+    "left-[6%] top-[38%] w-[17%] h-[19%]",
+    "right-[6%] top-[40%] w-[19%] h-[21%]",
+    "left-[10%] bottom-[11%] w-[20%] h-[20%]",
+    "right-[10%] bottom-[12%] w-[17%] h-[17%]",
+  ];
+
+  const floatMotion = [
+    [0, -6, 0],
+    [0, 8, 0],
+    [0, -5, 0],
+    [0, 6, 0],
+    [0, -7, 0],
+    [0, 5, 0],
+  ];
+
+  const delayMap = [0.18, 0.34, 0.5, 0.68, 0.84, 1.0];
+
+  return (
+    <Motion.section
+      ref={sectionRef}
+      style={{ opacity, y }}
+      aria-hidden={!isActive}
+      className={`absolute inset-0 z-[50] flex min-h-[100svh] items-center overflow-hidden font-sans ${
+        isActive ? "pointer-events-auto visible" : "pointer-events-none invisible"
+      }`}
+    >
+      <AmbientBackground scrollProgress={scrollYProgress} />
+
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-[1700px] items-center justify-center px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
+        <div className="relative flex min-h-[100svh] w-full items-center justify-center overflow-visible">
+          <Motion.div
+            style={{ opacity: titleOpacity, scale: titleScale }}
+            className="pointer-events-none relative z-30 flex items-center justify-center px-4 text-center"
+          >
+            <div className="max-w-5xl">
+              <div className="mx-auto mb-6 flex items-center justify-center gap-3">
+                <Motion.div
+                  animate={{ width: [42, 64, 42] }}
+                  transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+                  className="h-[2px] w-10 bg-gradient-to-r from-transparent via-white/70 to-transparent"
+                />
+                <span className="text-[10px] font-black uppercase tracking-[0.45em] text-white/45">
+                  Ecosystem Highlights - 05
+                </span>
+                <Motion.div
+                  animate={{ width: [42, 64, 42] }}
+                  transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+                  className="h-[2px] w-10 bg-gradient-to-r from-transparent via-[#0f49ff] to-transparent"
+                />
+              </div>
+              <TypewriterTitle isActive={titleReady} />
+            </div>
+          </Motion.div>
+
+          <div className="pointer-events-none absolute inset-0 z-20 hidden overflow-visible lg:block">
+            {panelStates.map((panel, index) => {
+              const isExpanded = expandedCard === index;
+              const isVisible = panelIndex >= index;
+              const revealPulse = panelIndex === index;
+
+              return (
+                <Motion.div
+                  key={panel.id}
+                  className={`pointer-events-auto absolute ${desktopPlacement[index]}`}
+                  animate={{
+                    y: floatMotion[index],
+                    scale: isExpanded ? 1.14 : revealPulse ? 1.03 : isVisible ? 1 : 0.93,
+                    opacity: isVisible ? 1 : 0,
+                  }}
+                  transition={{
+                    duration: 5.2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  initial={{ opacity: 0, scale: 0.45, y: 60 }}
+                  whileHover={{
+                    scale: 1.16,
+                    y: -10,
+                    zIndex: 60,
+                  }}
+                  onHoverStart={() => setExpandedCard(index)}
+                  onHoverEnd={() => setExpandedCard(null)}
+                >
+                  <CardWrapper
+                    active={isVisible}
+                    delay={delayMap[index]}
+                    side={index % 2 === 0 ? "left" : "right"}
+                    rotate={[-6, 5, 3, -4, -3, 6][index]}
+                    accent={
+                      panel.tone === "white"
+                        ? "white"
+                        : panel.tone === "black"
+                        ? "black"
+                        : panel.tone === "blue"
+                        ? "blue"
+                        : panel.tone === "violet"
+                        ? "violet"
+                        : "cyan"
+                    }
+                    expanded={isExpanded}
+                    className={`h-full w-full cursor-pointer ${panel.className} p-4 sm:p-5`}
+                  >
+                    <div className={`relative z-10 h-full ${isExpanded ? "p-1" : ""}`}>
+                      {panel.content}
+                    </div>
+
+                    <Motion.div
+                      className="pointer-events-none absolute inset-0 opacity-0"
+                      animate={{
+                        opacity: isVisible ? [0, 0.22, 0] : 0,
+                        scale: isVisible ? [0.82, 1.1, 1] : 1,
+                      }}
+                      transition={{ duration: 0.95, ease: "easeInOut" }}
+                      style={{
+                        background:
+                          "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.42), transparent 58%)",
+                      }}
+                    />
+
+                    <Motion.div
+                      className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100"
+                      animate={{ opacity: expandedCard === index ? 1 : 0 }}
+                      transition={{ duration: 0.2 }}
+                      style={{
+                        background:
+                          "radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 72%)",
+                      }}
+                    />
+                  </CardWrapper>
+                </Motion.div>
+              );
+            })}
+          </div>
+
+          <div className="relative z-20 grid w-full grid-cols-1 gap-4 lg:hidden">
+            <div className="rounded-[30px] border border-white/10 bg-black/20 p-5 text-center backdrop-blur-md sm:p-6">
+              <TypewriterTitle isActive={titleReady} />
+            </div>
+            {panelStates.map((panel, index) => {
+              const isExpanded = expandedCard === index;
+              const isVisible = panelIndex >= index;
+              return (
+                <Motion.div
+                  key={panel.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{
+                    opacity: isVisible ? 1 : 0,
+                    y: 0,
+                    scale: isExpanded ? 1.04 : 1,
+                  }}
+                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  onHoverStart={() => setExpandedCard(index)}
+                  onHoverEnd={() => setExpandedCard(null)}
+                >
+                  <CardWrapper
+                    active={isVisible}
+                    delay={delayMap[index]}
+                    side="left"
+                    rotate={0}
+                    accent={
+                      panel.tone === "white"
+                        ? "white"
+                        : panel.tone === "black"
+                        ? "black"
+                        : panel.tone === "blue"
+                        ? "blue"
+                        : panel.tone === "violet"
+                        ? "violet"
+                        : "cyan"
+                    }
+                    expanded={isExpanded}
+                    className={`rounded-[28px] ${panel.className} p-4 sm:p-5`}
+                  >
+                    <div className="relative z-10">{panel.content}</div>
+                  </CardWrapper>
+                </Motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
-    </Motion.div>
+    </Motion.section>
   );
 };
 
