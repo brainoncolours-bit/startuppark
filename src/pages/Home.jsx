@@ -1,5 +1,5 @@
 ﻿import React, { useRef, useState } from "react";
-import { useMotionValueEvent, useScroll, useTransform } from "framer-motion";
+import { useMotionValueEvent, useScroll } from "framer-motion";
 import AudienceUtilitySection from "../components/Home/AudienceUtilitySection";
 import EcosystemHighlightsSection from "../components/Home/EcosystemHighlightsSection";
 import HomeBackgroundGridSection from "../components/Home/HomeBackgroundGridSection";
@@ -14,54 +14,50 @@ import OfferingsDifferentiationSection from "../components/Home/OfferingsDiffere
 
 const DesignerStartupLanding = () => {
   const containerRef = useRef(null);
+  const activeLayersRef = useRef({
+    infrastructure: false,
+    audience: false,
+    offerings: false,
+    ecosystem: false,
+    contact: false,
+  });
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
-  const [activePhase, setActivePhase] = useState("hero");
+  const [activeLayers, setActiveLayers] = useState(activeLayersRef.current);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    const nextPhase =
-      latest < 0.22
-        ? "hero"
-        : latest < 0.46
-        ? "mission"
-        : latest < 0.77
-        ? "audience"
-        : latest < 0.93
-        ? "offerings"
-        : latest < 0.97
-        ? "ecosystem"
-        : "contact";
+    const nextLayers = {
+      infrastructure: latest >= 0.16 && latest < 0.34,
+      audience: latest >= 0.38 && latest < 0.59,
+      offerings: latest >= 0.56 && latest < 0.68,
+      ecosystem: latest >= 0.66 && latest < 0.84,
+      contact: latest >= 0.825,
+    };
 
-    setActivePhase((prev) => (prev === nextPhase ? prev : nextPhase));
+    const currentLayers = activeLayersRef.current;
+    if (
+      currentLayers.infrastructure !== nextLayers.infrastructure ||
+      currentLayers.audience !== nextLayers.audience ||
+      currentLayers.offerings !== nextLayers.offerings ||
+      currentLayers.ecosystem !== nextLayers.ecosystem ||
+      currentLayers.contact !== nextLayers.contact
+    ) {
+      activeLayersRef.current = nextLayers;
+      setActiveLayers(nextLayers);
+    }
   });
 
-  const audienceActive = activePhase === "audience";
-  const offeringsActive = activePhase === "offerings";
-  const ecosystemActive = activePhase === "ecosystem";
-  const contactActive = activePhase === "contact";
-
-  // Contact
-  const contactOpacity = useTransform(
-    scrollYProgress,
-    [0.968, 0.978, 0.992, 0.996],
-    [0, 1, 1, 0]
-  );
-  const contactY = useTransform(scrollYProgress, [0.968, 0.978], [60, 0]);
-
-  // Final reveal
-  const footerOpacity = useTransform(
-    scrollYProgress,
-    [0.996, 1],
-    [0, 1]
-  );
-  const footerScale = useTransform(scrollYProgress, [0.996, 1], [1.05, 1]);
+  const audienceActive = activeLayers.audience;
+  const offeringsActive = activeLayers.offerings;
+  const ecosystemActive = activeLayers.ecosystem;
+  const contactActive = activeLayers.contact;
 
   return (
     <div
       ref={containerRef}
-      className="relative h-[1800vh] bg-[#050816] text-white overflow-x-clip"
+      className="relative h-[1500vh] bg-[#050816] text-white overflow-x-clip"
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
@@ -223,12 +219,7 @@ const DesignerStartupLanding = () => {
         <HomeMissionSection scrollYProgress={scrollYProgress} />
         <HomeInfrastructureMapSection
           scrollYProgress={scrollYProgress}
-          isActive={
-            activePhase === "mission" ||
-            activePhase === "audience" ||
-            activePhase === "offerings" ||
-            activePhase === "ecosystem"
-          }
+          isActive={activeLayers.infrastructure}
         />
         <HomeCreedSection scrollYProgress={scrollYProgress} />
 
@@ -238,7 +229,6 @@ const DesignerStartupLanding = () => {
         />
 
         <OfferingsDifferentiationSection
-          key={activePhase}
           scrollYProgress={scrollYProgress}
           isActive={offeringsActive}
         />

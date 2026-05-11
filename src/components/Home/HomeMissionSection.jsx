@@ -4,27 +4,27 @@ import { motion as Motion, useSpring, useTransform } from "framer-motion";
 const HomeMissionSection = ({ scrollYProgress }) => {
   const blueprintOpacity = useTransform(
     scrollYProgress,
-    [0.045, 0.065, 0.18, 0.24],
+    [0.07, 0.09, 0.16, 0.18],
     [0, 1, 1, 0]
   );
-  const blueprintY = useTransform(scrollYProgress, [0.045, 0.08], [60, 0]);
+  const blueprintY = useTransform(scrollYProgress, [0.07, 0.09], [60, 0]);
   const pathLength = useSpring(
-    useTransform(scrollYProgress, [0.05, 0.16], [0, 1]),
-    { stiffness: 60, damping: 15 }
+    useTransform(scrollYProgress, [0.085, 0.155], [0, 1]),
+    { stiffness: 95, damping: 18 }
   );
   const missionHeadingColor = useTransform(
     scrollYProgress,
-    [0.06, 0.14],
+    [0.09, 0.135],
     ["#4b5563", "#ffffff"]
   );
   const missionSubtextColor = useTransform(
     scrollYProgress,
-    [0.08, 0.16],
+    [0.105, 0.15],
     ["#374151", "#9ca3af"]
   );
   const missionStatColor = useTransform(
     scrollYProgress,
-    [0.1, 0.18],
+    [0.115, 0.16],
     ["#1f2937", "#ffffff"]
   );
 

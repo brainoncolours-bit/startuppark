@@ -2,13 +2,13 @@ import React from "react";
 import { motion as Motion, useTransform } from "framer-motion";
 
 const HomeFinalRevealSection = ({ scrollYProgress }) => {
-  const footerOpacity = useTransform(scrollYProgress, [0.995, 1], [0, 1]);
-  const footerScale = useTransform(scrollYProgress, [0.995, 1], [1.05, 1]);
+  const footerOpacity = useTransform(scrollYProgress, [0.992, 1], [0, 1]);
+  const footerScale = useTransform(scrollYProgress, [0.992, 1], [1.05, 1]);
 
   return (
     <Motion.div
       style={{ opacity: footerOpacity, scale: footerScale }}
-      className="fixed inset-0 z-[200] bg-black text-white flex flex-col items-center justify-center overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-[200] bg-black text-white flex flex-col items-center justify-center overflow-hidden"
     >
       <div className="absolute top-1/2 -translate-y-1/2 left-0 w-[200%] flex whitespace-nowrap opacity-[0.03] pointer-events-none select-none">
         <div className="animate-marquee text-[30vh] font-bold flex">
@@ -28,7 +28,7 @@ const HomeFinalRevealSection = ({ scrollYProgress }) => {
         </Motion.h2>
 
         <div className="flex flex-col items-center gap-10">
-          <button className="group relative bg-white text-black px-16 py-8 rounded-full font-bold text-xl overflow-hidden transition-all duration-500 hover:scale-110 shadow-[0_20px_60px_-15px_rgba(255,255,255,0.2)]">
+          <button className="pointer-events-auto group relative bg-white text-black px-16 py-8 rounded-full font-bold text-xl overflow-hidden transition-all duration-500 hover:scale-110 shadow-[0_20px_60px_-15px_rgba(255,255,255,0.2)]">
             <span className="relative z-10">Enter the Ecosystem</span>
             <div className="absolute inset-0 bg-blue-600 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
           </button>

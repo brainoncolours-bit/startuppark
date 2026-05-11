@@ -16,7 +16,7 @@ const HomeBackgroundGridSection = ({ scrollYProgress }) => {
   const gridY = useTransform(scrollYProgress, [0, 1], ["0vh", "-120vh"]);
   const gridOpacity = useTransform(
     scrollYProgress,
-    [0, 0.015, 0.03, 0.055],
+    [0, 0.025, 0.055, 0.08],
     [1, 1, 0.55, 0]
   );
 

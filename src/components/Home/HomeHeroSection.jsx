@@ -6,12 +6,12 @@ const HomeHeroSection = ({ scrollYProgress }) => {
 
   const videoScale = useTransform(
     scrollYProgress,
-    [0, 0.02, 0.045],
+    [0, 0.025, 0.065],
     [1, 0.7, 0.38]
   );
-  const videoY = useTransform(scrollYProgress, [0.015, 0.05], ["0vh", "-120vh"]);
-  const videoRadius = useTransform(scrollYProgress, [0.015, 0.045], [0, 60]);
-  const videoOpacity = useTransform(scrollYProgress, [0.03, 0.055], [1, 0]);
+  const videoY = useTransform(scrollYProgress, [0.025, 0.075], ["0vh", "-120vh"]);
+  const videoRadius = useTransform(scrollYProgress, [0.025, 0.065], [0, 60]);
+  const videoOpacity = useTransform(scrollYProgress, [0.05, 0.08], [1, 0]);
 
   return (
     <Motion.div

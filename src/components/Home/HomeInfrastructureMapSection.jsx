@@ -72,56 +72,56 @@ const mapStops = [
 const HomeInfrastructureMapSection = ({ scrollYProgress, isActive = true }) => {
   const mapSectionOpacity = useTransform(
     scrollYProgress,
-    [0.22, 0.25, 0.33, 0.36],
+    [0.16, 0.185, 0.315, 0.34],
     [0, 1, 1, 0]
   );
-  const mapSectionY = useTransform(scrollYProgress, [0.22, 0.25], [50, 0]);
+  const mapSectionY = useTransform(scrollYProgress, [0.16, 0.185], [50, 0]);
   const mapHeaderOpacity = useTransform(
     scrollYProgress,
-    [0.23, 0.25, 0.31, 0.34],
+    [0.17, 0.195, 0.305, 0.33],
     [0, 1, 1, 0]
   );
-  const mapHeaderY = useTransform(scrollYProgress, [0.23, 0.25], [24, 0]);
-  const mapHeaderScale = useTransform(scrollYProgress, [0.23, 0.25], [0.98, 1]);
+  const mapHeaderY = useTransform(scrollYProgress, [0.17, 0.195], [24, 0]);
+  const mapHeaderScale = useTransform(scrollYProgress, [0.17, 0.195], [0.98, 1]);
 
-  const mapPanX = useTransform(scrollYProgress, [0.24, 0.36], ["0%", "0%"]);
-  const mapPanY = useTransform(scrollYProgress, [0.24, 0.36], ["0%", "0%"]);
-  const mapSurfaceY = useTransform(scrollYProgress, [0.24, 0.29], [16, 0]);
-  const mapSurfaceScale = useTransform(scrollYProgress, [0.24, 0.29], [0.99, 1]);
-  const mapSurfaceGlow = useTransform(scrollYProgress, [0.24, 0.36], [0.84, 1]);
+  const mapPanX = useTransform(scrollYProgress, [0.195, 0.315], ["0%", "0%"]);
+  const mapPanY = useTransform(scrollYProgress, [0.195, 0.315], ["0%", "0%"]);
+  const mapSurfaceY = useTransform(scrollYProgress, [0.19, 0.22], [16, 0]);
+  const mapSurfaceScale = useTransform(scrollYProgress, [0.19, 0.22], [0.99, 1]);
+  const mapSurfaceGlow = useTransform(scrollYProgress, [0.19, 0.315], [0.84, 1]);
 
-  const routeProgress = useTransform(scrollYProgress, [0.24, 0.36], [0, 1]);
+  const routeProgress = useTransform(scrollYProgress, [0.195, 0.31], [0, 1]);
   const routeOrbX = useTransform(
     scrollYProgress,
-    [0.24, 0.255, 0.27, 0.285, 0.3, 0.315, 0.33, 0.345, 0.36],
+    [0.195, 0.211, 0.227, 0.243, 0.259, 0.275, 0.291, 0.307, 0.315],
     ["18%", "42%", "72%", "58%", "26%", "46%", "76%", "60%", "60%"]
   );
   const routeOrbY = useTransform(
     scrollYProgress,
-    [0.24, 0.255, 0.27, 0.285, 0.3, 0.315, 0.33, 0.345, 0.36],
+    [0.195, 0.211, 0.227, 0.243, 0.259, 0.275, 0.291, 0.307, 0.315],
     ["18%", "28%", "22%", "48%", "56%", "66%", "70%", "84%", "84%"]
   );
-  const routeOrbScale = useTransform(scrollYProgress, [0.24, 0.28, 0.36], [0.7, 1, 0.92]);
-  const routeOrbGlow = useTransform(scrollYProgress, [0.24, 0.28, 0.36], [0.6, 1, 0.88]);
-  const stopsTrackY = useTransform(scrollYProgress, [0.24, 0.36], [0, -756]);
+  const routeOrbScale = useTransform(scrollYProgress, [0.195, 0.235, 0.31], [0.7, 1, 0.92]);
+  const routeOrbGlow = useTransform(scrollYProgress, [0.195, 0.235, 0.31], [0.6, 1, 0.88]);
+  const stopsTrackY = useTransform(scrollYProgress, [0.195, 0.31], [0, -756]);
 
-  const pin1Scale = useTransform(scrollYProgress, [0.24, 0.243, 0.247], [1, 1.15, 1]);
-  const pin2Scale = useTransform(scrollYProgress, [0.247, 0.25, 0.254], [1, 1.15, 1]);
-  const pin3Scale = useTransform(scrollYProgress, [0.254, 0.257, 0.261], [1, 1.15, 1]);
-  const pin4Scale = useTransform(scrollYProgress, [0.261, 0.264, 0.268], [1, 1.15, 1]);
-  const pin5Scale = useTransform(scrollYProgress, [0.268, 0.271, 0.275], [1, 1.15, 1]);
-  const pin6Scale = useTransform(scrollYProgress, [0.275, 0.278, 0.282], [1, 1.15, 1]);
-  const pin7Scale = useTransform(scrollYProgress, [0.282, 0.285, 0.289], [1, 1.15, 1]);
-  const pin8Scale = useTransform(scrollYProgress, [0.289, 0.292, 0.296], [1, 1.15, 1]);
+  const pin1Scale = useTransform(scrollYProgress, [0.195, 0.199, 0.206], [1, 1.15, 1]);
+  const pin2Scale = useTransform(scrollYProgress, [0.21, 0.214, 0.221], [1, 1.15, 1]);
+  const pin3Scale = useTransform(scrollYProgress, [0.225, 0.229, 0.236], [1, 1.15, 1]);
+  const pin4Scale = useTransform(scrollYProgress, [0.24, 0.244, 0.251], [1, 1.15, 1]);
+  const pin5Scale = useTransform(scrollYProgress, [0.255, 0.259, 0.266], [1, 1.15, 1]);
+  const pin6Scale = useTransform(scrollYProgress, [0.27, 0.274, 0.281], [1, 1.15, 1]);
+  const pin7Scale = useTransform(scrollYProgress, [0.285, 0.289, 0.296], [1, 1.15, 1]);
+  const pin8Scale = useTransform(scrollYProgress, [0.3, 0.304, 0.31], [1, 1.15, 1]);
 
-  const pin1Opacity = useTransform(scrollYProgress, [0.24, 0.243, 0.247], [0.7, 1, 0.7]);
-  const pin2Opacity = useTransform(scrollYProgress, [0.247, 0.25, 0.254], [0.7, 1, 0.7]);
-  const pin3Opacity = useTransform(scrollYProgress, [0.254, 0.257, 0.261], [0.7, 1, 0.7]);
-  const pin4Opacity = useTransform(scrollYProgress, [0.261, 0.264, 0.268], [0.7, 1, 0.7]);
-  const pin5Opacity = useTransform(scrollYProgress, [0.268, 0.271, 0.275], [0.7, 1, 0.7]);
-  const pin6Opacity = useTransform(scrollYProgress, [0.275, 0.278, 0.282], [0.7, 1, 0.7]);
-  const pin7Opacity = useTransform(scrollYProgress, [0.282, 0.285, 0.289], [0.7, 1, 0.7]);
-  const pin8Opacity = useTransform(scrollYProgress, [0.289, 0.292, 0.296], [0.7, 1, 0.7]);
+  const pin1Opacity = useTransform(scrollYProgress, [0.195, 0.199, 0.206], [0.7, 1, 0.7]);
+  const pin2Opacity = useTransform(scrollYProgress, [0.21, 0.214, 0.221], [0.7, 1, 0.7]);
+  const pin3Opacity = useTransform(scrollYProgress, [0.225, 0.229, 0.236], [0.7, 1, 0.7]);
+  const pin4Opacity = useTransform(scrollYProgress, [0.24, 0.244, 0.251], [0.7, 1, 0.7]);
+  const pin5Opacity = useTransform(scrollYProgress, [0.255, 0.259, 0.266], [0.7, 1, 0.7]);
+  const pin6Opacity = useTransform(scrollYProgress, [0.27, 0.274, 0.281], [0.7, 1, 0.7]);
+  const pin7Opacity = useTransform(scrollYProgress, [0.285, 0.289, 0.296], [0.7, 1, 0.7]);
+  const pin8Opacity = useTransform(scrollYProgress, [0.3, 0.304, 0.31], [0.7, 1, 0.7]);
 
   const pinScales = [
     pin1Scale,

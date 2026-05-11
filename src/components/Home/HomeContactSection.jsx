@@ -1,13 +1,17 @@
 import React from "react";
-import { motion as Motion, useTransform } from "framer-motion";
+import { motion as Motion, useSpring, useTransform } from "framer-motion";
 
 const HomeContactSection = ({ scrollYProgress, isActive = false }) => {
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 28,
+  });
   const contactOpacity = useTransform(
-    scrollYProgress,
-    [0.88, 0.92, 0.98, 1],
-    [0, 1, 1, 1]
+    smoothProgress,
+    [0.828, 0.855, 0.99],
+    [0, 1, 1]
   );
-  const contactY = useTransform(scrollYProgress, [0.88, 0.92], [60, 0]);
+  const contactY = useTransform(smoothProgress, [0.828, 0.855], [64, 0]);
 
   return (
     <Motion.div

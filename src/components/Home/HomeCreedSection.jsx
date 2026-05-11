@@ -4,10 +4,10 @@ import { motion as Motion, useTransform } from "framer-motion";
 const HomeCreedSection = ({ scrollYProgress }) => {
   const creedOpacity = useTransform(
     scrollYProgress,
-    [0.37, 0.4, 0.44, 0.48],
+    [0.34, 0.365, 0.39, 0.41],
     [0, 1, 1, 0]
   );
-  const creedScale = useTransform(scrollYProgress, [0.37, 0.4], [0.95, 1]);
+  const creedScale = useTransform(scrollYProgress, [0.34, 0.365], [0.95, 1]);
 
   return (
     <Motion.div
